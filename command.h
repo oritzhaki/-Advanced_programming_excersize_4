@@ -6,13 +6,13 @@ using namespace std;
 
 class Command {
 public:
-    Command(string description):description_(description){}
+    Command(string description):description(description){}
     virtual ~Command() {}
-    virtual void execute() = 0;
-    string getDescription() { return description_;}
-
+    virtual void execute() {}
+    string getDescription() { return description;}
 private:
-    string description_;
+    string description;
+    // dio = DefaultIO
 };
 
 
