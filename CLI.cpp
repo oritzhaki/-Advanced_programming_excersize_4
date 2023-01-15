@@ -14,5 +14,8 @@ CLI::CLI() {
 }
 
 void CLI::start() {
-    ////////////////////////////////////
+     // print menu
+    for (pair<int,Command> c : commands) {
+        cout << c.first << ". "<< c.second.getDescription() << endl;
+    }
 }
