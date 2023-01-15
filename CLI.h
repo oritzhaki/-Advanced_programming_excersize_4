@@ -9,6 +9,7 @@ using namespace std;
 #include "command4.h"
 #include "command5.h"
 #include <map>
+#include <iostream>
 
 class CLI {
 private:
