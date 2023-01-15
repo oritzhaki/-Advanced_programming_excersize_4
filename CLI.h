@@ -8,6 +8,7 @@ using namespace std;
 #include "command3.h"
 #include "command4.h"
 #include "command5.h"
+#include "DefaultIO.h"
 #include <map>
 #include <iostream>
 
@@ -15,7 +16,8 @@ class CLI {
 private:
     map<int,Command> commands;
 public:
-    CLI();
+    CLI(DefaultIO dio);
+    DefaultIO dio;
     void start();
 };
 
