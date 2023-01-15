@@ -5,7 +5,8 @@
 
 class Command5: public Command{
 public:
-    Command5() : Command("download results"){}
+    Command5(DefaultIO dio);
+    DefaultIO dio;
     void execute();
 };
 

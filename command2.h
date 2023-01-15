@@ -5,7 +5,8 @@
 
 class Command2: public Command{
 public:
-    Command2() : Command("algorithm settings"){};
+    Command2(DefaultIO dio);
+    DefaultIO dio;
     void execute();
 };
 

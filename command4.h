@@ -5,7 +5,8 @@
 
 class Command4: public Command{
 public:
-    Command4() : Command("display results"){}
+    Command4(DefaultIO dio);
+    DefaultIO dio;
     void execute();
 };
 

@@ -5,7 +5,8 @@
 
 class Command1: public Command{
 public:
-    Command1() : Command("upload an unclassified csv data file"){}
+    Command1(DefaultIO dio);
+    DefaultIO dio;
     void execute();
 };
 

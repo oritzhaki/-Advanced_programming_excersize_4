@@ -5,7 +5,8 @@
 
 class Command3: public Command{
 public:
-    Command3() : Command("classify data"){}
+    Command3(DefaultIO dio);
+    DefaultIO dio;
     void execute();
 };
 
