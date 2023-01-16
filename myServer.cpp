@@ -56,8 +56,18 @@ void MyServer::runServer(char** argv){
             perror("Server: error accepting client, goodbye!");
             continue; // get new client
         }
+        /// @brief start standardIO in CLI
+        /// @param sio is the standardIO obj
+        StandardIO sio; 
+        CLI cli(sio);
 
         while(true){ // same client
+            cli.start();
+            // 
+            Command cmd1 = cli.commands.at("1");
+            Command1 cmd = cmd1;
+            DBReader newReader = Command1(cmd1).reader;
+            
             char buffer[4096];
             int expected_data_len = sizeof(buffer); // the size of the buffer is the maximum received data length
             memset(buffer,0,expected_data_len);

@@ -7,49 +7,38 @@ CLI::CLI(DefaultIO dio) {
     Command3 cmd3(this->dio);
     Command4 cmd4(this->dio);
     Command5 cmd5(this->dio);
-    commands.insert({1, cmd1});
-    commands.insert({2, cmd2});
-    commands.insert({3, cmd3});
-    commands.insert({4, cmd4});
-    commands.insert({5, cmd5});
+    commands.insert({"1", cmd1});
+    commands.insert({"2", cmd2});
+    commands.insert({"3", cmd3});
+    commands.insert({"4", cmd4});
+    commands.insert({"5", cmd5});
+    this->variables;
+    // trainReader, testReader, k, metric, 
 }
 
 void CLI::start() {
 
     while (true) {
-        // print menu
-        for (pair<int,Command> c : commands) {
+        // create menu
+        string menu = "Welcome to the KNN Classifier Server. Please choose an option:\n";
+        for (pair<string,Command> c : commands) {
             //make string to send
-            string str = c.first + ". " + c.second.getDescription() + "\n";
-            this->dio.write(str);
+            menu = menu + c.first + ". " + c.second.getDescription() + "\n";
         }
+        this->dio.write(menu); // print menu
+        // get user choice - input
         string input = this->dio.read();
-        if (input == "1") {
-
+        // check which command does the user want to execute
+        if (input == "1" || input == "2" || input == "3" || input == "4" || input == "5") {
+            Command command = commands.at(input); // get the wanted command from map
+            command.execute();
+            continue; // after finish a command print menu again
         }
-        else if (input == "2")
-        {
-            /* code */
-        }
-        else if (input == "3")
-        {
-            /* code */
-        }
-        else if (input == "4")
-        {
-            /* code */
-        }
-        else if (input == "5")
-        {
-            /* code */
-        }
-        else if (input == "8")
-        {
+        else if (input == "8") {
             // need to close sockets and everything related
             // close connection to server
             break;
         }
-        
         else {
             this->dio.write("invalid input");
         }

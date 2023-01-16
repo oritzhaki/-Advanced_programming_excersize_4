@@ -13,12 +13,12 @@ using namespace std;
 #include <iostream>
 
 class CLI {
-private:
-    map<int,Command> commands;
 public:
+    map<string,Command> commands;
     CLI(DefaultIO dio);
     DefaultIO dio;
     void start();
+    Variables variables; // struct to hold all variables for classification
 };
 
 

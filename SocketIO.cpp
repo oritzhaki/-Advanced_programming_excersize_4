@@ -24,7 +24,7 @@ void SocketIO::write(const string& data) {
 }
 
 // Method to read a file's contents
-string SocketIO::readFile(const string& filePath) {
+DBReader SocketIO::readFile(const string& filePath) {
     ifstream file(filePath);
     if (!file.is_open()) {
         throw runtime_error("Error: Could not open file: " + filePath);
