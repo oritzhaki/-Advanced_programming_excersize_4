@@ -12,8 +12,8 @@ CLI::CLI(DefaultIO dio) {
     commands.insert({"3", cmd3});
     commands.insert({"4", cmd4});
     commands.insert({"5", cmd5});
-    this->variables;
-    // trainReader, testReader, k, metric, 
+    this->variables.k = 5;
+    this->variables.metric = "AUC";
 }
 
 void CLI::start() {

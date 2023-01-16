@@ -7,10 +7,12 @@
 using namespace std;
 
 struct Variables {
-    DBReader trainDB;
-    DBReader testDB;
-    int k = 5; // init with default value
-    string metric = "AUC"; // init with default value
+//    int k = 5; // init with default value
+//    string metric = "AUC"; // init with default value
+    int k;
+    string metric;
+    DBReader initiated_trainDB;
+    DBReader initiated_testDB;
 };
 
 class Command {
@@ -18,7 +20,7 @@ public:
     Command(string description):description(description){};
    // virtual ~Command() {}
     virtual void execute() {};
-    string getDescription(); 
+    string getDescription(){ return this->description;}
 private:
     string description;
     DefaultIO io;

@@ -1,13 +1,16 @@
 #include "command1.h"
-Command1::Command1(DefaultIO dio) : Command("upload an unclassified csv data file") {
+
+Command1::Command1(DefaultIO dio) : Command("upload an unclassified csv data file"), trainReader(true), testReader(false) {
     this->dio = dio;
 }
+
 void Command1::execute() {
     /// @brief upload csv file according to user input
-    auto csvFileUpload = [](string type, DefaultIO& dio, auto& data) {
+    auto csvFileUpload = [](string type, DefaultIO& dio, DBReader data) {
         dio.write("Please upload your local " + type + " CSV file.\n");
         string path = dio.read();
-        data = dio.readFile(path);
+        data.readerInit(path);
+        //data = dio.readFile(path);
         dio.write("Upload complete.\n");
         };
     
