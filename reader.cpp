@@ -119,3 +119,11 @@ bool DBReader::dataCheck(string temp, size_t offSet){
 bool DBReader::is_empty() {
     return this->xTrain.empty();
 }
+
+void DBReader::clear(){
+    this->myFile = "";
+    this->line = "";
+    this->word = "";
+    this->yTrain = {};
+    this->xTrain = {};
+}

@@ -4,9 +4,11 @@
 #include "command.h"
 
 class Command2: public Command{
-public:
-    Command2(DefaultIO dio);
+private:
     DefaultIO dio;
+    varHolder var;
+public:
+    Command2(DefaultIO dio, varHolder &variables);
     void execute();
 };
 

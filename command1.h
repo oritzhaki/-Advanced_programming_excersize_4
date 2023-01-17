@@ -4,11 +4,11 @@
 #include "command.h"
 
 class Command1: public Command{
-public:
-    Command1(DefaultIO dio);
+private:
     DefaultIO dio;
-    DBReader trainReader;
-    DBReader testReader;  // maybe take DBReader and add a flag to distinct between train and test
+    varHolder var;
+public:
+    Command1(DefaultIO dio, varHolder &variables);
     void execute();
 };
 

@@ -9,6 +9,7 @@ using namespace std;
 #include "command4.h"
 #include "command5.h"
 #include "DefaultIO.h"
+#include "varHolder.h"
 #include <map>
 #include <iostream>
 
@@ -18,7 +19,7 @@ public:
     CLI(DefaultIO dio);
     DefaultIO dio;
     void start();
-    Variables variables; // struct to hold all variables for classification
+    varHolder variables; // struct to hold all variables for classification
 };
 
 

@@ -26,6 +26,7 @@ public:
     vector<vector<double>> getXtrain();
     bool dataCheck(string temp, size_t offSet);
     bool is_empty();
+    void clear();
 };
 
 #endif

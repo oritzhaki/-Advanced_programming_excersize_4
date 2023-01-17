@@ -1,19 +1,17 @@
 #include "CLI.h"
 
-CLI::CLI(DefaultIO dio) {
+CLI::CLI(DefaultIO dio): variables() {
     this->dio = dio;
-    Command1 cmd1(this->dio);
-    Command2 cmd2(this->dio);
-    Command3 cmd3(this->dio);
-    Command4 cmd4(this->dio);
-    Command5 cmd5(this->dio);
+    Command1 cmd1(this->dio, variables);
+    Command2 cmd2(this->dio, variables);
+    Command3 cmd3(this->dio, variables);
+    Command4 cmd4(this->dio, variables);
+    Command5 cmd5(this->dio, variables);
     commands.insert({"1", cmd1});
     commands.insert({"2", cmd2});
     commands.insert({"3", cmd3});
     commands.insert({"4", cmd4});
     commands.insert({"5", cmd5});
-    this->variables.k = 5;
-    this->variables.metric = "AUC";
 }
 
 void CLI::start() {
