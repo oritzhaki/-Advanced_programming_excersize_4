@@ -9,16 +9,17 @@ using namespace std;
 #include "command4.h"
 #include "command5.h"
 #include "DefaultIO.h"
+#include "varHolder.h"
 #include <map>
 #include <iostream>
 
 class CLI {
-private:
-    map<int,Command> commands;
 public:
+    map<string,Command> commands;
     CLI(DefaultIO dio);
     DefaultIO dio;
     void start();
+    varHolder variables; // struct to hold all variables for classification
 };
 
 

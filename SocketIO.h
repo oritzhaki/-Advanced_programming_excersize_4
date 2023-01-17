@@ -22,7 +22,7 @@ public:
     void connect(const char* ipAddress, int port);
     string read();
     void write(const string& data);
-    string readFile(const string& filePath);
+    DBReader readFile(const string& filePath);
     void writeFile(const string& filePath, const string& contents);
     void close();
 };

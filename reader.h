@@ -16,14 +16,17 @@ private:
     vector<vector<double>> xTrain;
     vector<string> yTrain;
     string line, word;
+    bool is_classified;
 
 public:
-    DBReader();
+    DBReader(bool flag);
     void read();
     void readerInit(string f);
     vector<string> getYtrain();
     vector<vector<double>> getXtrain();
     bool dataCheck(string temp, size_t offSet);
+    bool is_empty();
+    void clear();
 };
 
 #endif

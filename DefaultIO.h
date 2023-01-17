@@ -3,16 +3,16 @@
 
 #include <iostream>
 #include <string>
+#include "reader.h"
 
 using namespace std;
 class DefaultIO {
-
 public:
     DefaultIO(){};
-    virtual string DefaultIO::read(){}
-    virtual string DefaultIO::write(string string){}
-    virtual string DefaultIO::readFile(){}
-    virtual string DefaultIO::writeFile(string string){}
+    virtual string read(){};
+    virtual void write(const string& output){};
+    virtual DBReader readFile(const string& filePath){};
+    virtual void writeFile(const string& filePath, const string& contents){};
     
 };
 

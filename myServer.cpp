@@ -1,6 +1,7 @@
 #include "serverUtilityFunctions.h"
 #include "myServer.h"
 #include "reader.h"
+#include "CLI.h"
 
 
 // the server is activated by: server.out file port
@@ -16,15 +17,15 @@ void MyServer::runServer(char** argv){
         return;
     }
 
-    string filename = argv[1];
-    DBReader newReader;
-    try{ //check file validation
-        newReader.readerInit(filename);
-    } catch (...){
-        // file doesnt exist/not valid OR bad value in file OR no consistant vector length
-        cout << "Server: Invalid file, goodbye!" << endl;
-        return;
-    }
+//    string filename = argv[1];
+//    DBReader newReader;
+//    try{ //check file validation
+//        newReader.readerInit(filename);
+//    } catch (...){
+//        // file doesnt exist/not valid OR bad value in file OR no consistant vector length
+//        cout << "Server: Invalid file, goodbye!" << endl;
+//        return;
+//    }
 
     int sock = socket(AF_INET, SOCK_STREAM, 0); // sock is the socket descriptor (socket ID)
     // SOCKSTREAM is communication type TPC. AF_NET is the communication domain for IPV4 (IP of different hosts)
@@ -48,7 +49,7 @@ void MyServer::runServer(char** argv){
         return;
     }
 
-    while(true) { // new client
+    while(true) { // new client - new thread
         struct sockaddr_in client_sin; // the socket address (IP+port)
         unsigned int addr_len = sizeof(client_sin);
         int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len); // create connection socket, ready to transfer data
@@ -58,6 +59,9 @@ void MyServer::runServer(char** argv){
         }
 
         while(true){ // same client
+            //CLI cli():
+            //cli.start()
+
             char buffer[4096];
             int expected_data_len = sizeof(buffer); // the size of the buffer is the maximum received data length
             memset(buffer,0,expected_data_len);

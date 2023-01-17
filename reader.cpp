@@ -1,10 +1,13 @@
 #include "reader.h"
 
 
-DBReader::DBReader(){
+DBReader::DBReader(bool flag){
     myFile = "";
     line = "";
     word = "";
+    yTrain = {};
+    xTrain = {};
+    is_classified = flag;
 }
 
 void DBReader::readerInit(string f){
@@ -14,45 +17,78 @@ void DBReader::readerInit(string f){
 
 // initiates xTrain and yTrain vectors by reading data from file
 void DBReader::read() {
-    vector<string> rowTemp;  // holds features of one sample in string from file
-    rowTemp.clear();
-    fstream fin(this->myFile, ios::in);
-    size_t offset = 0;
-    if(fin.is_open()) {
-        do {
-            rowTemp.clear();
-            getline(fin, line);   // read an entire row and store it in a string variable 'line'
-            stringstream s(line); // break the string up:
-            while (getline(s, word, ',')) {
-                rowTemp.push_back(word);
-            }
-            this->yTrain.push_back(rowTemp.back()); // extract label and add to ytrain
-            vector<double> features; // holds features of one sample in double converted from rowTemp
-            // convert rowTemp string vector into features double vector
-            for (int i = 0; i < rowTemp.size() - 1; i++) {
-                string temp = rowTemp[i];
-                if(temp[0] == '.') { // include features of type .1, .2 etc
-                    temp = '0' + temp;
+    if (this->is_classified) {
+        vector<string> rowTemp;  // holds features of one sample in string from file
+        rowTemp.clear();
+        fstream fin(this->myFile, ios::in);
+        size_t offset = 0;
+        if (fin.is_open()) {
+            do {
+                rowTemp.clear();
+                getline(fin, line);   // read an entire row and store it in a string variable 'line'
+                stringstream s(line); // break the string up:
+                while (getline(s, word, ',')) {
+                    rowTemp.push_back(word);
                 }
-                double temp2 = stod(temp, &offset);
-                if (this->dataCheck(temp, offset)) {
-                    features.push_back(temp2);
-                } else {
-                    throw 2;
-                } // only add if the input is valid
-            }
-            this->xTrain.push_back(features);
-        } while (!fin.eof());
+                this->yTrain.push_back(rowTemp.back()); // extract label and add to ytrain
+                vector<double> features; // holds features of one sample in double converted from rowTemp
+                // convert rowTemp string vector into features double vector
+                for (int i = 0; i < rowTemp.size() - 1; i++) {
+                    string temp = rowTemp[i];
+                    if (temp[0] == '.') { // include features of type .1, .2 etc
+                        temp = '0' + temp;
+                    }
+                    double temp2 = stod(temp, &offset);
+                    if (this->dataCheck(temp, offset)) {
+                        features.push_back(temp2);
+                    } else {
+                        throw 2;
+                    } // only add if the input is valid
+                }
+                this->xTrain.push_back(features);
+            } while (!fin.eof());
 
-        int numofx = this->xTrain[0].size();// checking all vectors are the same size
-        for(vector<double> v2 : this->xTrain){
-            if(v2.size() != numofx){
-                throw 3;
+            int numofx = this->xTrain[0].size();// checking all vectors are the same size
+            for (vector<double> v2 : this->xTrain) {
+                if (v2.size() != numofx) {
+                    throw 3;
+                }
             }
+        } else {
+            throw 1;
         }
-    }
-    else {
-        throw 1;
+    } else { //read test set
+        fstream fin(this->myFile, ios::in);
+        vector<string> rowTemp;
+        size_t offset = 0;
+        if (fin.is_open()) {
+            do {
+                rowTemp.clear(); // wil hold the string values
+                getline(fin, line);   // read an entire row and store it in a string variable 'line'
+                stringstream s(line); // break the string up:
+                while (getline(s, word, ',')) {
+                    rowTemp.push_back(word);
+                }
+                vector<double> features; // holds features of one sample in double converted from rowTemp
+                // convert rowTemp string vector into features double vector:
+                for (int i = 0; i < rowTemp.size() - 1; i++) {
+                    string temp = rowTemp[i];
+                    if (temp[0] == '.') { // include features of type .1, .2 etc
+                        temp = '0' + temp;
+                    }
+                    double temp2 = stod(temp, &offset);
+                    if (this->dataCheck(temp, offset)) {
+                        features.push_back(temp2);
+                    } else {
+                        throw 2;
+                    } // only add if the input is valid
+                }
+                this->xTrain.push_back(features);
+            } while (!fin.eof());
+            this->yTrain = {};
+        } else {
+            throw 1;
+        }
     }
 }
 
@@ -78,4 +114,16 @@ bool DBReader::dataCheck(string temp, size_t offSet){
         return true;
     }
     return false;
+}
+
+bool DBReader::is_empty() {
+    return this->xTrain.empty();
+}
+
+void DBReader::clear(){
+    this->myFile = "";
+    this->line = "";
+    this->word = "";
+    this->yTrain = {};
+    this->xTrain = {};
 }
