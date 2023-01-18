@@ -11,9 +11,7 @@ public:
     DefaultIO(){};
     virtual string read(){};
     virtual void write(const string& output){};
-    virtual DBReader readFile(const string& filePath){};
     virtual void writeFile(const string& filePath, const string& contents){};
-    
 };
 
 #endif
