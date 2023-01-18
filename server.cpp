@@ -3,6 +3,6 @@
 int main(int argc, char** argv){
     //server.out port
     MyServer s;
-    s.runServer(argv);
+    s.runServer();
     return 0;
 }

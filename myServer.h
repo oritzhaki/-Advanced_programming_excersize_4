@@ -14,7 +14,9 @@
 
 class MyServer {
 public:
-    void runServer(char** argv);
+    // void runServer(char** argv);
+    void runServer();
+
 };
 
 #endif
