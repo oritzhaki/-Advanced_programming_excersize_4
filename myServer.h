@@ -10,7 +10,6 @@
 #include "CLI.h"
 #include "SocketIO.h"
 #include "StandardIO.h"
-#include "DefaultIO.h"
 
 class MyServer {
 public:
