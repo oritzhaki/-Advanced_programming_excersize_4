@@ -30,7 +30,7 @@ void Command2::execute(){
         //general validity:
         // check correct order of inputs???
         if(words.size() != 2){
-            ///////////////what to say??
+            ///////////////what to say?? throw error for invalid input to send to client and exit?
             return;
         }
 
@@ -39,6 +39,7 @@ void Command2::execute(){
         try{
             new_k = stoi(words[0]); // if not number at all, here will already go to error
             if(!all_of(words[0].begin(), words[0].end(), ::isdigit)){throw false;} // check whole num
+            if(new_k <= 0) {throw false;}// make sure k is positive
         } catch(...){
             this->dio.write(k_invalid_msg);
             k_valid = false;
