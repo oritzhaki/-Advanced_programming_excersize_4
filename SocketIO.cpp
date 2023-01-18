@@ -23,16 +23,6 @@ void SocketIO::write(const string& data) {
     ::write(this->socket, data.c_str(), data.size());
 }
 
-// Method to read a file's contents
-DBReader SocketIO::readFile(const string& filePath) {
-    ifstream file(filePath);
-    if (!file.is_open()) {
-        throw runtime_error("Error: Could not open file: " + filePath);
-    }
-    string contents((istreambuf_iterator<char>(file)),
-                            istreambuf_iterator<char>());
-    return contents;
-}
 
 // Method to write a string to a file
 void SocketIO::writeFile(const string& filePath, const string& contents) {
