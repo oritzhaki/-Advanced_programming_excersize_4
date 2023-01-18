@@ -24,7 +24,6 @@ void StandardIO::writeFile(const string& filePath, const string& contents) {
     }catch(runtime_error e){
         cout << e.what();
     }
-
 }
 
 
