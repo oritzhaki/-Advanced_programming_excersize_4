@@ -18,6 +18,9 @@ void Command1::execute() {
         string path2 = dio.read();
         this->var.setTestDBR(path2);
         dio.write("Upload complete.\n");
+
+        //clear previous classifications if exist:
+        this->var.setClassifications({});
     } catch(...) {
         return;
     }

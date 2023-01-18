@@ -16,6 +16,7 @@ void Command3::execute() {
             classifications.push_back(make_pair(i + 1, knn.predict(this->var.getTestDBR().getXtrain().at(i))));
         }
         this->var.setClassifications(classifications);
+        this->dio.write("classifying data complete");
     }
     return;
 }
