@@ -9,9 +9,9 @@ using namespace std;
 class DefaultIO {
 public:
     DefaultIO(){};
-    virtual string read(){};
-    virtual void write(const string& output){};
-    virtual void writeFile(const string& filePath, const string& contents){};
+    virtual string read();
+    virtual void write(const string& output);
+    virtual void writeFile(const string& filePath, const string& contents);
 };
 
 #endif
