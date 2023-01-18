@@ -3,6 +3,7 @@
 varHolder::varHolder(): trainData(true), testData(false){
     k = 5;
     metric = "AUC";
+    classifications = {};
 }
 
 int varHolder::getK(){
@@ -37,4 +38,12 @@ DBReader varHolder::getTestDBR(){
 void varHolder::setTestDBR(string filepath){
     this->testData.clear();
     this->testData.readerInit(filepath);
+}
+
+vector<pair<int, string>> varHolder::getClassifications(){
+    return this->classifications;
+}
+
+void varHolder::setClassifications(vector<pair<int, string>> classified_data){
+    this->classifications = classified_data;
 }
