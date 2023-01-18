@@ -2,6 +2,7 @@
 #define ADVANCED_PROGRAMMING_EXERSIZE_4_COMMAND3_H
 
 #include "command.h"
+#include "knn.h"
 
 class Command3: public Command{
 private:

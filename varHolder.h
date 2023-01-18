@@ -10,6 +10,7 @@ private:
     string metric;
     DBReader trainData;
     DBReader testData;
+    vector<pair<int, string>> classifications;
 public:
     varHolder();
     int getK();
@@ -20,6 +21,8 @@ public:
     void setTrainDBR(string filepath);
     DBReader getTestDBR();
     void setTestDBR(string filepath);
+    vector<pair<int, string>> getClassifications();
+    void setClassifications(vector<pair<int, string>> classified_data);
 };
 
 
