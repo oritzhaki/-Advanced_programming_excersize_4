@@ -1,13 +1,12 @@
 #include "command3.h"
 
-Command3::Command3(DefaultIO dio, varHolder &variables): Command("classify data") {
-    this->dio = dio;
-    this->var = variables;
+Command3::Command3(DefaultIO* io, varHolder& variables): Command("classify data"), io_(io), var(variables){
+    this->io_ = io;
 }
 
 void Command3::execute() {
     if(this->var.getTrainDBR().is_empty() || this->var.getTestDBR().is_empty()){
-        this->dio.write("please upload data");
+        this->io_->write("please upload data");
     } else{
         Knn knn(this->var.getK(), this->var.getMetric());
         knn.fit(this->var.getTrainDBR().getXtrain(), this->var.getTrainDBR().getYtrain());
@@ -16,7 +15,7 @@ void Command3::execute() {
             classifications.push_back(make_pair(i + 1, knn.predict(this->var.getTestDBR().getXtrain().at(i))));
         }
         this->var.setClassifications(classifications);
-        this->dio.write("classifying data complete");
+        this->io_->write("classifying data complete");
     }
     return;
 }

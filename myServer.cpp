@@ -9,8 +9,7 @@
 void MyServer::runServer(){
 
     while(true) { // for one client
-        DefaultIO dio;
-        CLI cli(dio);
+        CLI cli(new StandardIO);
         cli.start();
     }
 //     int server_port;

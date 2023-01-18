@@ -5,10 +5,10 @@
 
 class Command4: public Command{
 private:
-    DefaultIO dio;
-    varHolder var;
+    DefaultIO* io_;
+    varHolder& var;
 public:
-    Command4(DefaultIO dio, varHolder &variables);
+    Command4(DefaultIO* io, varHolder& variables);
     void execute();
 };
 

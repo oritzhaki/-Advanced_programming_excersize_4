@@ -1,35 +1,29 @@
 #include "CLI.h"
 
-CLI::CLI(DefaultIO dio): variables() {
-    this->dio = dio;
-    Command1 cmd1(this->dio, variables);
-    Command2 cmd2(this->dio, variables);
-    Command3 cmd3(this->dio, variables);
-    Command4 cmd4(this->dio, variables);
-    Command5 cmd5(this->dio, variables);
-    commands.insert({"1", cmd1});
-    commands.insert({"2", cmd2});
-    commands.insert({"3", cmd3});
-    commands.insert({"4", cmd4});
-    commands.insert({"5", cmd5});
+CLI::CLI(DefaultIO* io): variables(), io_(io) {
+    this->io_ = io;
+    commands.insert({"1", new Command1(this->io_, variables)});
+    commands.insert({"2", new Command2(this->io_, variables)});
+    commands.insert({"3", new Command3(this->io_, variables)});
+    commands.insert({"4", new Command4(this->io_, variables)});
+    commands.insert({"5", new Command5(this->io_, variables)});
 }
 
 void CLI::start() {
-
     while (true) {
         // create menu
         string menu = "Welcome to the KNN Classifier Server. Please choose an option:\n";
-        for (pair<string,Command> c : commands) {
+        for (pair<string,Command*> c : commands) {
             //make string to send
-            menu = menu + c.first + ". " + c.second.getDescription() + "\n";
+            menu = menu + c.first + ". " + c.second->getDescription() + "\n";
         }
-        this->dio.write(menu); // print menu
+        this->io_->write(menu); // print menu
         // get user choice - input
-        string input = this->dio.read();
+        string input = this->io_->read();
         // check which command does the user want to execute
         if (input == "1" || input == "2" || input == "3" || input == "4" || input == "5") {
-            Command command = commands.at(input); // get the wanted command from map
-            command.execute();
+            Command* command = commands.at(input); // get the wanted command from map
+            command->execute();
             continue; // after finish a command print menu again
         }
         else if (input == "8") {
@@ -38,9 +32,7 @@ void CLI::start() {
             break;
         }
         else {
-            this->dio.write("invalid input");
+            this->io_->write("invalid input");
         }
-        
     }
-    
 }

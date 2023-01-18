@@ -1,14 +1,13 @@
 #include "command2.h"
 
-Command2::Command2(DefaultIO dio, varHolder &variables) : Command("algorithm settings") {
-    this->dio = dio;
-    this->var = variables;
+Command2::Command2(DefaultIO* io, varHolder& variables): Command("algorithm settings"), io_(io), var(variables) {
+    this->io_ = io;
 }
 
 void Command2::execute(){
     string msg = "The current KNN parameters are: K = " + to_string(this->var.getK()) + ", distance metric = " + this->var.getMetric();
-    this->dio.write(msg);
-    string input = this->dio.read();
+    this->io_->write(msg);
+    string input = this->io_->read();
     if(!(input == "\n")){// the user entered "K MET"
 
         //break up the input
@@ -41,7 +40,7 @@ void Command2::execute(){
             if(!all_of(words[0].begin(), words[0].end(), ::isdigit)){throw false;} // check whole num
             if(new_k <= 0) {throw false;}// make sure k is positive
         } catch(...){
-            this->dio.write(k_invalid_msg);
+            this->io_->write(k_invalid_msg);
             k_valid = false;
         }
 
@@ -49,7 +48,7 @@ void Command2::execute(){
         string new_metric = words[1];
         if((new_metric != "AUC") && (new_metric != "MAN") &&
            (new_metric != "CHB") && (new_metric != "CAN") && (new_metric != "MIN")){
-            this->dio.write(met_invalid_msg);
+            this->io_->write(met_invalid_msg);
             met_valid = false;
         }
 

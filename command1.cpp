@@ -1,28 +1,28 @@
 #include "command1.h"
 
-Command1::Command1(DefaultIO dio, varHolder &variables) : Command("upload an unclassified csv data file") {
-    this->dio = dio;
-    this->var = variables;
+Command1::Command1(DefaultIO* io, varHolder& variables): Command("upload an unclassified csv data file"), io_(io), var(variables) {
+    io_ = io;
+    var.setK(8);
 }
 
 void Command1::execute() {
     try{
         // try read file and initialize reader train set
-        this->dio.write("Please upload your local train CSV file.\n");
-        string path1 = dio.read();
+        this->io_->write("Please upload your local train CSV file.");
+        string path1 = io_->read();
         this->var.setTrainDBR(path1);
-        this->dio.write("Upload complete.\n");
+        this->io_->write("Upload complete.\n");
 
         // try read file and initialize test set
-        dio.write("Please upload your local test CSV file.\n");
-        string path2 = this->dio.read();
+        io_->write("Please upload your local test CSV file.");
+        string path2 = this->io_->read();
         this->var.setTestDBR(path2);
-        this->dio.write("Upload complete.\n");
+        this->io_->write("Upload complete.\n");
 
         //clear previous classifications if exist:
         this->var.setClassifications({});
     } catch(...) {
-        this->dio.write("invalid input.\n"); // path is invalid
+        this->io_->write("invalid input.\n"); // path is invalid
         return;
     }
 }

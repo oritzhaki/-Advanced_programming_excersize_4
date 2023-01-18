@@ -1,7 +1,7 @@
 #ifndef ADVANCED_PROGRAMMING_EXERSIZE_4_CLI_H
 #define ADVANCED_PROGRAMMING_EXERSIZE_4_CLI_H
 
-using namespace std;
+//using namespace std;
 
 #include "command1.h"
 #include "command2.h"
@@ -14,10 +14,11 @@ using namespace std;
 #include <iostream>
 
 class CLI {
+private:
+    DefaultIO* io_;
+    map<string,Command*> commands;
 public:
-    map<string,Command> commands;
-    CLI(DefaultIO dio);
-    DefaultIO dio;
+    CLI(DefaultIO* io);
     void start();
     varHolder variables; // struct to hold all variables for classification
 };
