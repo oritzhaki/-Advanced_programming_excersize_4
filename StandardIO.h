@@ -5,7 +5,7 @@ using namespace std;
 
 class StandardIO : public DefaultIO {
 public:
-    StandardIO(){};
+    StandardIO(int num){};
     string read();
     void write(const string& output);
     void writeFile(const string& filePath, const string& contents);

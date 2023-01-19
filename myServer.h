@@ -10,12 +10,22 @@
 #include "CLI.h"
 #include "SocketIO.h"
 #include "StandardIO.h"
+#include "reader.h"
+#include "serverUtilityFunctions.h"
 
 class MyServer {
+private:
+    const int THREAD_POOL_SIZE = 4;
+    vector<int> clientSockets;
+    pthread_mutex_t queue_lock;
+    pthread_cond_t queue_cond;
+    vector<bool> threadStatus;
+    int next_thread = 0;
 public:
-    // void runServer(char** argv);
-    void runServer();
-
+    MyServer();
+    void handleClient(int sock);
+    void runServer(int argc, char** argv);
+    
 };
 
 #endif

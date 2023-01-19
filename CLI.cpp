@@ -1,13 +1,13 @@
 #include "CLI.h"
 
-CLI::CLI(DefaultIO* io): variables(), io_(io) {
+CLI::CLI(DefaultIO* io): variables() {
     this->io_ = io;
     commands.insert({"1", new Command1(this->io_, variables)});
     commands.insert({"2", new Command2(this->io_, variables)});
     commands.insert({"3", new Command3(this->io_, variables)});
     commands.insert({"4", new Command4(this->io_, variables)});
     commands.insert({"5", new Command5(this->io_, variables)});
-}
+};
 
 void CLI::start() {
     while (true) {
@@ -17,6 +17,7 @@ void CLI::start() {
             //make string to send
             menu = menu + c.first + ". " + c.second->getDescription() + "\n";
         }
+        menu = menu + "8. exit\n";
         this->io_->write(menu); // print menu
         // get user choice - input
         string input = this->io_->read();
@@ -29,10 +30,14 @@ void CLI::start() {
         else if (input == "8") {
             // need to close sockets and everything related
             // close connection to server
-            break;
+            for(pair<string,Command*> c : commands) {
+                delete c.second; // this is how to delete all new?
+            }
+            commands.clear();
+            return;
         }
         else {
-            this->io_->write("invalid input");
+            this->io_->write("invalid @@@ input\n");
         }
     }
-}
+};

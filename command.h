@@ -5,13 +5,13 @@
 #include "DefaultIO.h"
 #include "varHolder.h"
 #include <string>
+#include <algorithm>
 using namespace std;
 
 
 class Command {
 public:
     Command(string description):description(description){};
-   // virtual ~Command() {}
     virtual void execute() {};
     string getDescription(){ return this->description;};
 private:

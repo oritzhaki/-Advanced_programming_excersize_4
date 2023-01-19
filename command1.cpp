@@ -1,8 +1,8 @@
 #include "command1.h"
 
 Command1::Command1(DefaultIO* io, varHolder& variables): Command("upload an unclassified csv data file"), io_(io), var(variables) {
-    io_ = io;
-    var.setK(8);
+    this->io_ = io;
+    var.setK(5);
 }
 
 void Command1::execute() {

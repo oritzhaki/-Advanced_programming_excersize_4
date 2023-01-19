@@ -1,9 +1,9 @@
 #include "varHolder.h"
 
 varHolder::varHolder(): trainData(true), testData(false){
-    k = 5;
-    metric = "AUC";
-    classifications = {};
+    this->k = 5;
+    this->metric = "AUC";
+    this->classifications = {};
 }
 
 int varHolder::getK(){
