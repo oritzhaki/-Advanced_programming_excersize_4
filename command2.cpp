@@ -4,12 +4,12 @@ Command2::Command2(DefaultIO* io, varHolder& variables): Command("algorithm sett
     this->io_ = io;
 }
 
-void Command2::execute(){
+string Command2::execute(){
     string msg = "The current KNN parameters are: K = " + to_string(this->var.getK()) + ", distance metric = " + this->var.getMetric();
     this->io_->write(msg);
     string input = this->io_->read();
     cout << "cmd2 input: " << input << " .";
-    if(!(input == "\n")){// the user entered "K MET"
+    if(!(input == "")){// the user entered "K MET"
         //break up the input
         vector<string> words;
         size_t start = 0, end = 0;
@@ -21,16 +21,15 @@ void Command2::execute(){
 
         //check validity:
 
-        string k_invalid_msg = "invalid value for K";
-        string met_invalid_msg = "invalid value for metric";
+        string k_invalid_msg = "invalid value for K\n";
+        string met_invalid_msg = "invalid value for metric\n";
         bool k_valid = true;
         bool met_valid = true;
+        string rtrn_message = "";
 
         //general validity:
-        // check correct order of inputs???
-        if(words.size() != 2){
-            ///////////////what to say?? throw error for invalid input to send to client and exit?
-            return;
+        if(words.size() != 2){ // check correct order of inputs???
+            return "invalid input.\n"; //////////////
         }
 
         // k validity:
@@ -40,7 +39,7 @@ void Command2::execute(){
             if(!all_of(words[0].begin(), words[0].end(), ::isdigit)){throw false;} // check whole num
             if(new_k <= 0) {throw false;}// make sure k is positive
         } catch(...){
-            this->io_->write(k_invalid_msg);
+            rtrn_message = k_invalid_msg;
             k_valid = false;
         }
 
@@ -48,7 +47,7 @@ void Command2::execute(){
         string new_metric = words[1];
         if((new_metric != "AUC") && (new_metric != "MAN") &&
            (new_metric != "CHB") && (new_metric != "CAN") && (new_metric != "MIN")){
-            this->io_->write(met_invalid_msg);
+            rtrn_message = rtrn_message + met_invalid_msg;
             met_valid = false;
         }
 
@@ -57,6 +56,7 @@ void Command2::execute(){
             this->var.setK(new_k);
             this->var.setMetric(new_metric);
         }
+        return rtrn_message;
     }
-    return; // if user pressed ENTER, will go straight to here
+    return ""; // if user pressed ENTER, will go straight to here
 }

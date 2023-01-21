@@ -5,7 +5,7 @@ Command1::Command1(DefaultIO* io, varHolder& variables): Command("upload an uncl
     var.setK(5);
 }
 
-void Command1::execute() {
+string Command1::execute() {
     try{
         // try read file and initialize reader train set
         // then try read file and initialize test set
@@ -15,12 +15,10 @@ void Command1::execute() {
         this->io_->write("Upload complete.\nPlease upload your local test CSV file.");
         string path2 = this->io_->read();
         this->var.setTestDBR(path2);
-        this->io_->write("Upload complete.");
-
         //clear previous classifications if exist:
         this->var.setClassifications({});
+        return "Upload complete.\n";
     } catch(...) {
-        this->io_->write("invalid input.\n"); // path is invalid
-        return;
+        return "invalid input.\n"; // path is invalid
     }
 }

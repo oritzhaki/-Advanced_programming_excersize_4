@@ -4,9 +4,9 @@ Command3::Command3(DefaultIO* io, varHolder& variables): Command("classify data"
     this->io_ = io;
 }
 
-void Command3::execute() {
+string Command3::execute() {
     if(this->var.getTrainDBR().is_empty() || this->var.getTestDBR().is_empty()){
-        this->io_->write("please upload data");
+        return "please upload data\n";
     } else{
         Knn knn(this->var.getK(), this->var.getMetric());
         knn.fit(this->var.getTrainDBR().getXtrain(), this->var.getTrainDBR().getYtrain());
@@ -15,7 +15,6 @@ void Command3::execute() {
             classifications.push_back(make_pair(i + 1, knn.predict(this->var.getTestDBR().getXtrain().at(i))));
         }
         this->var.setClassifications(classifications);
-        this->io_->write("classifying data complete");
+        return "classifying data complete\n";
     }
-    return;
 }

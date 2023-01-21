@@ -9,7 +9,7 @@ private:
     varHolder& var;
 public:
     Command4(DefaultIO* io, varHolder& variables);
-    void execute();
+    string execute();
 };
 
 #endif //ADVANCED_PROGRAMMING_EXERSIZE_4_COMMAND4_H

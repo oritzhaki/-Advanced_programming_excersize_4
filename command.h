@@ -12,7 +12,7 @@ using namespace std;
 class Command {
 public:
     Command(string description):description(description){};
-    virtual void execute() {};
+    virtual string execute() {return "";};
     string getDescription(){ return this->description;};
 private:
     string description;

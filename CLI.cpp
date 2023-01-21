@@ -10,24 +10,22 @@ CLI::CLI(DefaultIO* io): variables() {
 }
 
 void CLI::start() {
+    // create menu
+    string menu = "\nWelcome to the KNN Classifier Server. Please choose an option:\n";
+    for (pair<string,Command*> c : commands) {
+        //make string to send
+        menu = menu + c.first + ". " + c.second->getDescription() + "\n";
+    }
+    menu = menu + "8. exit\n";
+    string tempmenu = menu;
     while (true) {
-        // create menu
-        string menu = "\nWelcome to the KNN Classifier Server. Please choose an option:\n";
-        for (pair<string,Command*> c : commands) {
-            //make string to send
-            menu = menu + c.first + ". " + c.second->getDescription() + "\n";
-        }
-        menu = menu + "8. exit\n";
-        this->io_->write(menu); // print menu
-        // get user choice - input
-        string input = this->io_->read();
-        // check which command does the user want to execute
-        //cout << "input in cliii:" << input << "...";
+        this->io_->write(tempmenu); // print menu
+        string input = this->io_->read(); // get user choice - input
         if (input == "1" || input == "2" || input == "3" || input == "4" || input == "5") {
             //cout << "im in cli correct inputs" << endl;
             Command* command = commands.at(input); // get the wanted command from map
-            command->execute();
-            continue; // after finish a command print menu again
+            string additional_string = command->execute();
+            tempmenu = additional_string + menu;// after finish a command print menu again
         }
         else if (input == "8") {
             // close connection to server
@@ -37,8 +35,8 @@ void CLI::start() {
             commands.clear();
             return;
         }
-        else { ///////////////////what to do what to doooo
-            this->io_->write("invalid @@@ input\n");
+        else {
+            tempmenu = "invalid input\n" + menu;
         }
     }
 }

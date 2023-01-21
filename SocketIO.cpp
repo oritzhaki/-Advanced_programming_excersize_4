@@ -26,7 +26,6 @@ void SocketIO::write(const string& data) {
     }
 }
 
-
 // Method to write a string to a file
 void SocketIO::writeFile(const string& filePath, const string& contents) {
     ofstream file(filePath);
