@@ -1,7 +1,7 @@
 #ifndef ADVANCED_PROGRAMMING_EXERSIZE_4_CLI_H
 #define ADVANCED_PROGRAMMING_EXERSIZE_4_CLI_H
 
-using namespace std;
+//using namespace std;
 
 #include "command1.h"
 #include "command2.h"

@@ -7,12 +7,12 @@ CLI::CLI(DefaultIO* io): variables() {
     commands.insert({"3", new Command3(this->io_, variables)});
     commands.insert({"4", new Command4(this->io_, variables)});
     commands.insert({"5", new Command5(this->io_, variables)});
-};
+}
 
 void CLI::start() {
     while (true) {
         // create menu
-        string menu = "Welcome to the KNN Classifier Server. Please choose an option:\n";
+        string menu = "\nWelcome to the KNN Classifier Server. Please choose an option:\n";
         for (pair<string,Command*> c : commands) {
             //make string to send
             menu = menu + c.first + ". " + c.second->getDescription() + "\n";
@@ -22,7 +22,9 @@ void CLI::start() {
         // get user choice - input
         string input = this->io_->read();
         // check which command does the user want to execute
+        //cout << "input in cliii:" << input << "...";
         if (input == "1" || input == "2" || input == "3" || input == "4" || input == "5") {
+            //cout << "im in cli correct inputs" << endl;
             Command* command = commands.at(input); // get the wanted command from map
             command->execute();
             continue; // after finish a command print menu again
@@ -36,8 +38,8 @@ void CLI::start() {
             commands.clear();
             return;
         }
-        else {
+        else if (input.size() > 0){ ///////////////////what to do what to doooo
             this->io_->write("invalid @@@ input\n");
         }
     }
-};
+}

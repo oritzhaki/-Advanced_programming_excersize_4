@@ -10,16 +10,20 @@
 #include <arpa/inet.h> 
 #include <unistd.h>
 #include <vector>
+#include <pthread.h>
+#include <fcntl.h>
+#include <queue>
+#include <thread>
+#include <chrono>
+#include "SocketIO.h"
+#include "DefaultIO.h"
 
 using namespace std;
-
-const int BUFFER_SIZE = 4096;
 
 class MyClient {
 public:    
     // MyClient() {};
     void run(int argc, char** argv);
-
 };
 
 

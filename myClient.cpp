@@ -1,38 +1,42 @@
 #include "myClient.h"
 #include "clientUtilityFunctions.h"
 
-#include <iostream>
-#include <pthread.h>
-#include <string>
-#include <unistd.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
+struct ThreadData {
+    DefaultIO* io;
+    pthread_mutex_t mutex;
+    pthread_cond_t cond;
+    queue<string> messages;
+    int socket;
+};
 
-void* receive_from_server(void* client_socket) {
-    // receive data from the server
-    char buffer[4096];
-    int bytes_received = recv(*((int*) client_socket), buffer, sizeof(buffer), 0);
-    if (bytes_received > 0) {
-        cout << buffer << endl;
+void* receive_from_server(void* arg) {    // receive data from the server
+    ThreadData* data = (ThreadData*) arg;
+    while(true){
+        string message = data->io->read(); // get message from server
+        cout << message << endl;
+        pthread_mutex_lock(&data->mutex); // lock
+        data->messages.push(message); // add to queue
+        pthread_cond_signal(&data->cond); // signal that a new message is available
+        pthread_mutex_unlock(&data->mutex); // unlock
     }
     return 0;
 }
 
-void* send_to_server(void* client_socket) {
-    // send data to the server
-    string message;
-    getline(cin, message);
-    send(*((int*) client_socket), message.c_str(), message.size(), 0);
-    // while (getline(cin, message)) {
-    //     send(*((int*) client_socket), message.c_str(), message.size(), 0);
-    // }
+void* send_to_server(void* arg) {    // send data to the server
+    ThreadData* data = (ThreadData*) arg;
+    while(true){
+        string message;
+        pthread_mutex_lock(&data->mutex); // lock
+        getline(cin, message); // insert message
+        data->messages.push(message);
+        pthread_mutex_unlock(&data->mutex); // unlock
+        data->io->write(message); // send to server
+    }
     return 0;
 }
 
-
 void MyClient::run(int argc, char** argv) {
-    // make sure there are 3 arguments to activate client 
+    // make sure there are 3 arguments to activate client
     if (argc < 3) {
         cerr << "Usage: client.out IP_ADDRESS PORT" << endl;
         return;
@@ -50,7 +54,6 @@ void MyClient::run(int argc, char** argv) {
     }
 
     // connect to the server
-        // Set up the server address
     struct sockaddr_in serverAddr;
     memset(&serverAddr, 0, sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
@@ -61,7 +64,7 @@ void MyClient::run(int argc, char** argv) {
         return;
     }
 
-        // Connect to the server
+    // Connect to the server
     if (connect(client_socket, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
         cerr << "Error connecting to server" << endl;
         return;
@@ -69,57 +72,30 @@ void MyClient::run(int argc, char** argv) {
 
     pthread_t receive_thread; // create a receive thread
     pthread_t send_thread; // create a send thread
-    while (true) {
-        // receive_from_server((void*) &client_socket);
-        // send_to_server((void*) &client_socket);
-        pthread_create(&receive_thread, NULL, receive_from_server, (void*) &client_socket);
-        pthread_create(&send_thread, NULL, send_to_server, (void*) &client_socket);
+    // create the thread data:
+    ThreadData data;
+    data.io = new SocketIO(client_socket);
+    data.socket = client_socket;
+    pthread_mutex_init(&data.mutex, NULL);
+    pthread_cond_init(&data.cond, NULL);
+    while (!data.messages.empty()) {
+        data.messages.pop();
     }
+
+    // send threads to interact with server
+    pthread_create(&receive_thread, NULL, receive_from_server, &data);
+    pthread_create(&send_thread, NULL, send_to_server, &data);
    
     // wait for the receive thread to finish
     pthread_join(receive_thread, NULL);
     pthread_join(send_thread, NULL);
+    //pthread_mutex_destroy();
 
     // close the socket
     close(client_socket);
 
-    // Close client    
+    // Close client
     return;
-
-   
-
-    // // Run an infinite loop to get a vector from the user
-    // while (true) {
-        
-    //     string input;
-    //     getline(cin, input);
-
-    //     if (input == "-1") {
-    //         // Close the socket and program
-    //         break;
-    //     }
-
-    //     if (!userInputValidation(input)) { // if input invalid, don't send to server and ask again for user input
-    //         continue;
-       
-    //     } else { // if input valid -> send to server
-       
-    //         // Send the input to the server
-    //         send(client_socket, input.c_str(), input.size(), 0);
-
-    //         // Receive the response from the server
-    //         char buffer[BUFFER_SIZE];
-    //         int bytes_received = recv(client_socket, buffer, BUFFER_SIZE, 0);
-    //         if (bytes_received < 0) {
-    //             // connection is closed
-    //             cerr << "Error receiving data from server" << endl;
-    //             break;
-    //         }
-
-    //         // Received messege from server
-    //         cout << string(buffer, bytes_received) << endl;
-            
-    //     }
 }
 
  

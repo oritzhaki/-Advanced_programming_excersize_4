@@ -8,8 +8,8 @@ void Command2::execute(){
     string msg = "The current KNN parameters are: K = " + to_string(this->var.getK()) + ", distance metric = " + this->var.getMetric();
     this->io_->write(msg);
     string input = this->io_->read();
+    cout << "cmd2 input: " << input << " .";
     if(!(input == "\n")){// the user entered "K MET"
-
         //break up the input
         vector<string> words;
         size_t start = 0, end = 0;

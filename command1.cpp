@@ -8,16 +8,14 @@ Command1::Command1(DefaultIO* io, varHolder& variables): Command("upload an uncl
 void Command1::execute() {
     try{
         // try read file and initialize reader train set
+        // then try read file and initialize test set
         this->io_->write("Please upload your local train CSV file.");
         string path1 = io_->read();
         this->var.setTrainDBR(path1);
-        this->io_->write("Upload complete.\n");
-
-        // try read file and initialize test set
-        io_->write("Please upload your local test CSV file.");
+        this->io_->write("Upload complete.\nPlease upload your local test CSV file.");
         string path2 = this->io_->read();
         this->var.setTestDBR(path2);
-        this->io_->write("Upload complete.\n");
+        this->io_->write("Upload complete.");
 
         //clear previous classifications if exist:
         this->var.setClassifications({});

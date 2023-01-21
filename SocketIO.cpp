@@ -1,35 +1,29 @@
 #include "SocketIO.h"
 
-SocketIO::SocketIO(int client_sock) {
-    this->socket = client_sock;
-}
+SocketIO::SocketIO(int client_sock): socket(client_sock) {}
 
 string SocketIO::read() {
-    char buffer[4096];
-    int expected_data_len = sizeof(buffer); // the size of the buffer is the maximum received data length
-    memset(buffer,0,expected_data_len);
-    int read_bytes = recv(this->socket, buffer, expected_data_len, 0);
-
+    char * buffer = new char[BUFFER_SIZE];
+    memset(buffer,0,BUFFER_SIZE);
+    int read_bytes = recv(this->socket, buffer, BUFFER_SIZE, 0);
     if(read_bytes < 0){
         return "Server: error reading from socket, goodbye!";
-    } 
-    // char buffer[4096];
-    // int bytesReceived = ::read(this->socket, buffer, sizeof(buffer));
-    // return string(buffer, bytesReceived);
-  
-    return string(buffer);
+    }
+    buffer[read_bytes] = '\0';
+    string output = string(buffer);
+    //cout << "in socketio read: " << output << endl;
+    delete[] buffer;
+    return output;
 }
 
 // Method to write data to the socket
 void SocketIO::write(const string& data) {
-    const string& output = data + '\n';
-    int sent_bytes = send(this->socket, output.c_str(), output.size(), 0);
+    const string& output = data;
+    //cout << "in socketio write: " << string(output) << endl;
+    int sent_bytes = send(this->socket, output.c_str(), output.size() + 1, 0);
     if (sent_bytes < 0){   // send fails
         perror("Server: error sending to client, goodbye!");
-        
     }
-    // ::write(this->socket, data.c_str(), data.size());
-
 }
 
 

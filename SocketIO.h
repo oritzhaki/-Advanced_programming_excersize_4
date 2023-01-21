@@ -13,10 +13,11 @@
 
 using namespace std;
 
+const int BUFFER_SIZE = 4096;
+
 class SocketIO : public DefaultIO{
 private:
     int socket;
-
 public:
     SocketIO(int client_sock);
     // void connect(const char* ipAddress, int port);

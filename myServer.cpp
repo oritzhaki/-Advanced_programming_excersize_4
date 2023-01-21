@@ -7,7 +7,7 @@ MyServer::MyServer(){
 void MyServer::handleClient(int sock) { // for one client
 
     // int threadId = *(int *)arg;
-    int clientSock = sock;
+    //int clientSock = sock;
 
         // pthread_mutex_lock(&queue_lock);
         // while (this->threadStatus[threadId] == false) {
@@ -20,14 +20,14 @@ void MyServer::handleClient(int sock) { // for one client
 
         // Handle client socket
         
-    DefaultIO *io = new SocketIO(clientSock);
+    DefaultIO *io = new SocketIO(sock);
     CLI cli(io);
     cli.start();
         // if we got here user doesn't want to play anymore
         // delete io;
         // io->write("goodbye!");
 
-    close(clientSock);
+    close(sock);
     // pthread_mutex_lock(&queue_lock);
     // threadStatus[threadId] = true;
     // pthread_cond_signal(&queue_cond);
@@ -81,7 +81,7 @@ void MyServer::runServer(int argc, char** argv) {
     sin.sin_family = AF_INET;
     sin.sin_addr.s_addr = INADDR_ANY;
     sin.sin_port = htons(server_port); // converts port to bytes
-    if(bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0){  // binding socket to port
+    if(::bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0){  // binding socket to port
         perror("Server: error binding socket, goodbye!");
         return;
     }
