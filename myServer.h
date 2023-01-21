@@ -7,6 +7,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <thread>
 #include "CLI.h"
 #include "SocketIO.h"
 #include "StandardIO.h"

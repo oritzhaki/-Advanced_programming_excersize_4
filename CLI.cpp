@@ -30,7 +30,6 @@ void CLI::start() {
             continue; // after finish a command print menu again
         }
         else if (input == "8") {
-            // need to close sockets and everything related
             // close connection to server
             for(pair<string,Command*> c : commands) {
                 delete c.second; // this is how to delete all new?
@@ -38,7 +37,7 @@ void CLI::start() {
             commands.clear();
             return;
         }
-        else if (input.size() > 0){ ///////////////////what to do what to doooo
+        else { ///////////////////what to do what to doooo
             this->io_->write("invalid @@@ input\n");
         }
     }
