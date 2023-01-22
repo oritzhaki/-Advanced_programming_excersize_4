@@ -1,39 +1,56 @@
 #include "myClient.h"
 #include "clientUtilityFunctions.h"
 
-struct ThreadData {
-    DefaultIO* io;
-    pthread_mutex_t mutex;
-    pthread_cond_t cond;
-    queue<string> messages;
-    int socket;
-};
-
-void* receive_from_server(void* arg) {    // receive data from the server
-    ThreadData* data = (ThreadData*) arg;
-    while(true){
-        string message = data->io->read(); // get message from server
-        cout << message << endl;
-        pthread_mutex_lock(&data->mutex); // lock
-        data->messages.push(message); // add to queue
-        pthread_cond_signal(&data->cond); // signal that a new message is available
-        pthread_mutex_unlock(&data->mutex); // unlock
+void* write_to_file(void* arg){
+    try{
+        int sock = *((int*) arg);
+        DefaultIO *io = new SocketIO(sock);
+        io->write("");
+        string results = io->read();
+        string input;
+        getline(cin, input);
+        io->writeFile(input, results);
+        io->write("");
+        delete io;
+    }catch(runtime_error& e){
+        cout << e.what();
     }
     return 0;
 }
 
-void* send_to_server(void* arg) {    // send data to the server
-    ThreadData* data = (ThreadData*) arg;
-    while(true){
-        string message;
-        pthread_mutex_lock(&data->mutex); // lock
-        getline(cin, message); // insert message
-        data->messages.push(message);
-        pthread_mutex_unlock(&data->mutex); // unlock
-        data->io->write(message); // send to server
-    }
-    return 0;
-}
+//struct ThreadData {
+//    DefaultIO* io;
+//    pthread_mutex_t mutex;
+//    pthread_cond_t cond;
+//    queue<string> messages;
+//    int socket;
+//};
+
+//void* receive_from_server(void* arg) {    // receive data from the server
+//    ThreadData* data = (ThreadData*) arg;
+//    while(true){
+//        string message = data->io->read(); // get message from server
+//        cout << message << endl;
+//        pthread_mutex_lock(&data->mutex); // lock
+//        data->messages.push(message); // add to queue
+//        pthread_cond_signal(&data->cond); // signal that a new message is available
+//        pthread_mutex_unlock(&data->mutex); // unlock
+//    }
+//    return 0;
+//}
+
+//void* send_to_server(void* arg) {    // send data to the server
+//    ThreadData* data = (ThreadData*) arg;
+//    while(true){
+//        string message;
+//        pthread_mutex_lock(&data->mutex); // lock
+//        getline(cin, message); // insert message
+//        data->messages.push(message);
+//        pthread_mutex_unlock(&data->mutex); // unlock
+//        data->io->write(message); // send to server
+//    }
+//    return 0;
+//}
 
 void MyClient::run(int argc, char** argv) {
     // make sure there are 3 arguments to activate client
@@ -70,26 +87,43 @@ void MyClient::run(int argc, char** argv) {
         return;
     }
 
-    pthread_t receive_thread; // create a receive thread
-    pthread_t send_thread; // create a send thread
-    // create the thread data:
-    ThreadData data;
-    data.io = new SocketIO(client_socket);
-    data.socket = client_socket;
-    pthread_mutex_init(&data.mutex, NULL);
-    pthread_cond_init(&data.cond, NULL);
-    while (!data.messages.empty()) {
-        data.messages.pop();
+    pthread_t download_thread;
+    DefaultIO *io = new SocketIO(client_socket);
+    while(true){
+        string input;
+        string message = io->read();
+        if(message == "upload results:"){
+            pthread_create(&download_thread, NULL, write_to_file, (void*) &client_socket);
+            pthread_detach(download_thread);
+            this_thread::sleep_for(chrono::milliseconds (100));
+            continue;
+        } else{
+            cout << message << endl;
+            getline(cin, input);
+            io->write(input);
+        }
     }
-
+//    pthread_t receive_thread; // create a receive thread
+//    pthread_t send_thread; // create a send thread
+//    // create the thread data:
+//    ThreadData data;
+//    data.io = new SocketIO(client_socket);
+//    data.socket = client_socket;
+//    pthread_mutex_init(&data.mutex, NULL);
+//    pthread_cond_init(&data.cond, NULL);
+//    while (!data.messages.empty()) {
+//        data.messages.pop();
+//    }
     // send threads to interact with server
-    pthread_create(&receive_thread, NULL, receive_from_server, &data);
-    pthread_create(&send_thread, NULL, send_to_server, &data);
-   
+//    pthread_create(&receive_thread, NULL, receive_from_server, &data);
+//    pthread_create(&send_thread, NULL, send_to_server, &data);
+
     // wait for the receive thread to finish
-    pthread_join(receive_thread, NULL);
-    pthread_join(send_thread, NULL);
+//    pthread_join(receive_thread, NULL);
+//    pthread_join(send_thread, NULL);
     //pthread_mutex_destroy();
+
+    delete io;
 
     // close the socket
     close(client_socket);

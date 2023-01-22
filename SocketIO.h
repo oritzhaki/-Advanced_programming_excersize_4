@@ -13,7 +13,7 @@
 
 using namespace std;
 
-const int BUFFER_SIZE = 4096;
+const int BUFFER_SIZE = 8192;
 
 class SocketIO : public DefaultIO{
 private:
