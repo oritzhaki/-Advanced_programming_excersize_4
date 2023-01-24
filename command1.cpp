@@ -10,15 +10,17 @@ string Command1::execute() {
         // try read file and initialize reader train set
         // then try read file and initialize test set
         this->io_->write("Please upload your local train CSV file.");
-        string path1 = io_->read();
-        this->var.setTrainDBR(path1);
+        string trainData = io_->saveData("train"); // create local server train data file
+        this->var.setTrainDBR(trainData);
         this->io_->write("Upload complete.\nPlease upload your local test CSV file.");
-        string path2 = this->io_->read();
-        this->var.setTestDBR(path2);
+        string testData = this->io_->saveData("test"); // create local server test data file
+        this->var.setTestDBR(testData);
         //clear previous classifications if exist:
         this->var.setClassifications({});
+    
         return "Upload complete.\n";
+
     } catch(...) {
-        return "invalid input.\n"; // path is invalid
+        return "invalid input.\n"; // data is invalid
     }
 }

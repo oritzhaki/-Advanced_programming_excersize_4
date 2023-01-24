@@ -13,6 +13,10 @@ public:
     virtual string read() {return "";};
     virtual void write(const string& output) {};
     virtual void writeFile(const string& filePath, const string& contents) {};
+    virtual string saveData(string dataType) {return "";};
+    virtual string readFile(const string& filePath) {return "";};
+    virtual int writeFromFile(const string& data) {return 0;};
+
 };
 
 #endif

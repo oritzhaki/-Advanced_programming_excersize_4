@@ -13,16 +13,20 @@
 
 using namespace std;
 
-const int BUFFER_SIZE = 8192;
 
 class SocketIO : public DefaultIO{
 private:
     int socket;
+    const int BUFFER_SIZE = 4096;
+
 public:
     SocketIO(int client_sock);
     // void connect(const char* ipAddress, int port);
     string read();
     void write(const string& data);
+    int writeFromFile(const string& data);
     void writeFile(const string& filePath, const string& contents);
+    string saveData(string dataType);
+    string readFile(const string& filePath);
     void close();
 };

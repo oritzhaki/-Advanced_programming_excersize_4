@@ -5,6 +5,7 @@ void* write_to_file(void* arg){
     try{
         int sock = *((int*) arg);
         DefaultIO *io = new SocketIO(sock);
+        // DefaultIO* io = ((DefaultIO*) arg);
         io->write("");
         string results = io->read();
         string input;
@@ -18,39 +19,35 @@ void* write_to_file(void* arg){
     return 0;
 }
 
-//struct ThreadData {
-//    DefaultIO* io;
-//    pthread_mutex_t mutex;
-//    pthread_cond_t cond;
-//    queue<string> messages;
-//    int socket;
-//};
+// Method to send local data from client to server
+void MyClient::sendData(string message, DefaultIO* dio) {
+    DefaultIO *io = dio;
+    
+    cout << message << endl;
+    string path;
+    getline(cin, path);
+    string fileContant = io->readFile(path);
 
-//void* receive_from_server(void* arg) {    // receive data from the server
-//    ThreadData* data = (ThreadData*) arg;
-//    while(true){
-//        string message = data->io->read(); // get message from server
-//        cout << message << endl;
-//        pthread_mutex_lock(&data->mutex); // lock
-//        data->messages.push(message); // add to queue
-//        pthread_cond_signal(&data->cond); // signal that a new message is available
-//        pthread_mutex_unlock(&data->mutex); // unlock
-//    }
-//    return 0;
-//}
+     // Send the file in chunks
+    int byteSent = 0;
+    int bytesLeft = fileContant.length(); 
+    int BUFFER_SIZE = 4096;
 
-//void* send_to_server(void* arg) {    // send data to the server
-//    ThreadData* data = (ThreadData*) arg;
-//    while(true){
-//        string message;
-//        pthread_mutex_lock(&data->mutex); // lock
-//        getline(cin, message); // insert message
-//        data->messages.push(message);
-//        pthread_mutex_unlock(&data->mutex); // unlock
-//        data->io->write(message); // send to server
-//    }
-//    return 0;
-//}
+    while (bytesLeft > 0) { // while there are still bytes to send
+        int bytes_to_send = min(BUFFER_SIZE, bytesLeft);
+        int result = io->writeFromFile(fileContant);
+        io->read(); // handle inner logics
+        if (result < 0) {
+            throw false; // file is not valid
+        }
+        byteSent += result;
+        bytesLeft -= result;
+    }
+
+
+    
+    // write data to server -> write - read empty - loop
+}
 
 void MyClient::run(int argc, char** argv) {
     // make sure there are 3 arguments to activate client
@@ -80,7 +77,7 @@ void MyClient::run(int argc, char** argv) {
         cerr << "Error parsing IP address" << endl;
         return;
     }
-
+   
     // Connect to the server
     if (connect(client_socket, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
         cerr << "Error connecting to server" << endl;
@@ -92,8 +89,23 @@ void MyClient::run(int argc, char** argv) {
     while(true){
         string input;
         string message = io->read();
-        if(message == "upload results:"){
-            pthread_create(&download_thread, NULL, write_to_file, (void*) &client_socket);
+        if(message == "Please upload your local train CSV file.") {
+            try {
+                sendData(message, io); // upload train data
+                // read another message from server
+                cout << "finish send train" << endl;
+                io->write(""); // handle inner logics
+                string newMessage = io->read();   // iris_classified.csv
+                cout << "new message: " << newMessage << endl;
+                sendData(newMessage, io); // upload test data
+
+            } catch(...) {
+                cout << "invalid input." << endl; // path doesn't exist
+            }        
+            continue;    
+        } 
+        else if(message == "upload results:"){
+            pthread_create(&download_thread, NULL, write_to_file, (void*) &client_socket); // can change to send io instead socket????
             pthread_detach(download_thread);
             this_thread::sleep_for(chrono::milliseconds (100));
             continue;

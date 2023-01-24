@@ -9,6 +9,9 @@ public:
     string read();
     void write(const string& output);
     void writeFile(const string& filePath, const string& contents);
+    string saveData(string dataType) {return "";};
+    string readFile(const string& filePath) {return "";};
+    int writeFromFile(const string& data) {return 0;};
 };
 
 

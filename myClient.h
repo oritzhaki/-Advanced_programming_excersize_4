@@ -24,6 +24,7 @@ class MyClient {
 public:    
     // MyClient() {};
     void run(int argc, char** argv);
+    void sendData(string message, DefaultIO* io);
 };
 
 
