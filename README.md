@@ -58,7 +58,7 @@ To run the program, you need to open three separate terminal windows.
 2. Navigate to the directory where the client file is located.
 3. Run the command: `./client.out IP PORT` e.g. `./client.out 127.0.0.1 8888`
 4. The client will connect to the server. Repeat steps 1-3 for each additional client that you want to connect.
-5. The client will follow the instructions that are shown in the menu from the server.
+5. The client will follow the instructions that are shown in the menu from the server as explained below.
 
 **Note**: Make sure the server is running before starting the clients and that client connects to the same port as server.
 
@@ -68,16 +68,54 @@ The server will present the client with a menu of 6 options. The client can sele
 All other input is considered invalid.
 
 
-The client will see the following menu:
+The user will see the following menu:
 
 ![image](https://user-images.githubusercontent.com/118104474/214587711-15b0a355-0337-4f46-a64b-d9ecf7204638.png)
 
-Now the client needs to choose the option from the menu he wants to be execute. Suppose he choose 1-
-He needs to follow the instructions the server gives him according to the option the client choose.
-Here the user gave a valid path to the train set.
+Now the user needs to choose the option from the menu he wants to be execute. 
+**If 1 is chosen ->**
+user will write a valid path of his local train data and then another path of his local test data like this:
+```
+1
+```
+>Please upload your local train CSV file.
+```
+/train_path
+```
+>Upload complete.>Please upload your local test CSV file.
+```
+/train_path
+```
+>Upload complete.
 
-![image](https://user-images.githubusercontent.com/118104474/214588588-d7380218-ee60-4058-8006-a73b1b0944b8.png)
+**If 2 is chosen ->** 
+user will see the current k and metric. if he press enter the current values stay the same, if you want to edit you insert your updates like this:
+```
+K METRIC
+```
+or
+```
+METRIC K
+```
+where k is a positive number that is smaller then number of samples in train set and k is one of the 5 distance metrics- AUC MAN CUB CYB 
 
-So it goes. The user needs to choose the option and to insert valid input according to the server's requests.
+**If 3 is chosen ->**
+the data will get classified.
+
+**If 4 is chosen ->**
+you will see the results of classification.
+
+**If 5 is chosen ->** 
+you need to insert a local path to download the results of classification. Like this:
+```
+/path
+```
+where path could be `results.csv.`
+
+**If 8 is chosen ->** 
+client disconnect from server.
+
+
+In general, the user needs to choose the option and to insert valid input according to the server's requests.
 
 
