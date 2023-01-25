@@ -5,13 +5,13 @@ void* write_to_file(void* arg){
     try{
         int sock = *((int*) arg);
         DefaultIO *io = new SocketIO(sock);
+        io->write("READY_TO_SAVE");
         // DefaultIO* io = ((DefaultIO*) arg);
-        io->write("");
-        string results = io->read();
-        string input;
-        getline(cin, input);
-        io->writeFile(input, results);
-        io->write("");
+        // io->write("");
+        string path;
+        getline(cin, path); // get path from user to save results
+        io->saveData(path); // save data in the local path
+        // io->write("");
         delete io;
     }catch(runtime_error& e){
         cout << e.what();
@@ -23,7 +23,6 @@ void* write_to_file(void* arg){
 void MyClient::sendData(string message, DefaultIO* dio) {
     DefaultIO *io = dio;
     
-    
     cout << message << endl;
     string path;
     getline(cin, path);
@@ -34,22 +33,24 @@ void MyClient::sendData(string message, DefaultIO* dio) {
         throw false;
     }
 
-     // Send the file in chunks
-    int bytesLeft = fileContent.length(); 
-    int BUFFER_SIZE = 4096;
-   
-    // if fileContent is empty ///////////////////
+    io->write(fileContent);
 
-    while (bytesLeft > 0) { // while there are still bytes to send
-        int bytesToSend = min(BUFFER_SIZE, bytesLeft);
-        int result = io->writeFromFile(fileContent);
-        // io->read(); // handle inner logics
-        // if (result < 0) {
-        //     throw false; // file is not valid
-        // }
-        bytesLeft -= result;
-    }
-    io->write("");
+    //  // Send the file in chunks
+    // int bytesLeft = fileContent.length(); 
+    // int BUFFER_SIZE = 4096;
+   
+    // // if fileContent is empty ///////////////////
+
+    // while (bytesLeft > 0) { // while there are still bytes to send
+    //     int bytesToSend = min(BUFFER_SIZE, bytesLeft);
+    //     int result = io->writeFromFile(fileContent);
+    //     // io->read(); // handle inner logics
+    //     // if (result < 0) {
+    //     //     throw false; // file is not valid
+    //     // }
+    //     bytesLeft -= result;
+    // }
+    // io->write("");
 
 }
 
@@ -104,7 +105,8 @@ void MyClient::run(int argc, char** argv) {
                 this_thread::sleep_for(chrono::milliseconds (100));
 
             } catch(...) {
-                cout << "invalid input." << endl; // path doesn't exist
+                 // path doesn't exist
+                 io->write("");
             }        
             continue;    
         } 
@@ -114,7 +116,7 @@ void MyClient::run(int argc, char** argv) {
             this_thread::sleep_for(chrono::milliseconds (100));
             continue;
         }
-        else if(message == "EXIT"){
+        else if(message == "EXIT"){ // user pressed 8 so exit
             break;
         
         } else { 

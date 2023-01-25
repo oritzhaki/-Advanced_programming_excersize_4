@@ -18,9 +18,11 @@ string Command5::execute() {
             out_classifications = out_classifications + out_row;
         }
         this->io_->write("upload results:");
-        this->io_->read();
+        // string ready = this->io_->read();
+        // if (ready == "READY_TO_SAVE") {
         this->io_->write(out_classifications);
-        this->io_->read();
+        // }
+        // this->io_->read();
     }
     return "";
 }

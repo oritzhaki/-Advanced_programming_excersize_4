@@ -75,21 +75,49 @@ string SocketIO::readFile(const string& filePath) {
 }
 
 // Method to create local server data file
-string SocketIO::saveData(string dataType) {
-    string fileName = dataType + "Set.csv";
+void SocketIO::saveData(string fileName) {
+    // string fileName = dataType;
     
-    while(true) {
-        string data = this->read();
-        // this->write(""); // handle inner logics
-        if (data.length() == 0) { // check if finish reading all data
-            break;
-        } 
+    // while(true) {
+    //     string data = this->read();
+    //     // this->write(""); // handle inner logics
+    //     if (data.length() == 0 || data.empty() || data == "" || data == "\n" || data == "\0") { // check if finish reading all data
+    //         break;
+    //     } 
 
-        this->writeFile(fileName, data);
+    //     this->writeFile(fileName, data);
 
         
+    // }
+    string message;
+    int bytes_received = 0;
+    int buffer_size = 4096;
+    char * buffer = new char[buffer_size];
+    while ((bytes_received = recv(this->socket, buffer, buffer_size, 0)) > 0) {
+        if(bytes_received == buffer_size) {
+            buffer_size *= 2;
+            char * new_buffer = new char[buffer_size];
+            memcpy(new_buffer, buffer, buffer_size / 2);
+            delete[] buffer;
+            buffer = new_buffer;
+
+        }else {
+            break;
+        }
     }
-    return fileName; // return the server "local path" of file 
+    if (bytes_received < 0) {
+    return;
+    }
+    message.append(buffer, bytes_received);
+    if(message.size() == 1) { // if message is empty it means that there is invalid path in client side so abort
+        cout << "inside" << endl;
+        throw false;
+    }
+    std::cout << message.size() << std::endl;
+    delete[] buffer;
+    // std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    this->writeFile(fileName, message); // write local file
+
 }
 
 // Method to close the socket

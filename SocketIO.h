@@ -26,7 +26,7 @@ public:
     void write(const string& data);
     int writeFromFile(const string& data);
     void writeFile(const string& filePath, const string& contents);
-    string saveData(string dataType);
+    void saveData(string dataType);
     string readFile(const string& filePath);
     void close();
     const int BUFFER_SIZE = 4096;

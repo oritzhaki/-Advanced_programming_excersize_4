@@ -6,9 +6,9 @@ Command4::Command4(DefaultIO* io, varHolder& variables): Command("display result
 
 string Command4::execute() {
     if(this->var.getTrainDBR().is_empty() || this->var.getTestDBR().is_empty()){
-        return "please upload data";
+        return "please upload data\n";
     } else if(this->var.getClassifications().empty()){
-        return "please classify the data";
+        return "please classify the data\n";
     } else {
         string out_classifications;
         string out_row;
