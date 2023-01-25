@@ -17,7 +17,7 @@ using namespace std;
 class SocketIO : public DefaultIO{
 private:
     int socket;
-    const int BUFFER_SIZE = 4096;
+    
 
 public:
     SocketIO(int client_sock);
@@ -29,4 +29,5 @@ public:
     string saveData(string dataType);
     string readFile(const string& filePath);
     void close();
+    const int BUFFER_SIZE = 4096;
 };

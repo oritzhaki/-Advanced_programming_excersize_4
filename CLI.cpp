@@ -7,6 +7,7 @@ CLI::CLI(DefaultIO* io): variables() {
     commands.insert({"3", new Command3(this->io_, variables)});
     commands.insert({"4", new Command4(this->io_, variables)});
     commands.insert({"5", new Command5(this->io_, variables)});
+    // commands.insert({"8", new Command5(this->io_, variables)});
 }
 
 void CLI::start() {
@@ -33,10 +34,11 @@ void CLI::start() {
                 delete c.second; // this is how to delete all new?
             }
             commands.clear();
-            return;
+            break;
         }
         else {
             tempmenu = "invalid input\n" + menu;
         }
     }
+    return;
 }

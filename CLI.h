@@ -20,7 +20,7 @@ private:
 public:
     CLI(DefaultIO* io);
     void start();
-    varHolder variables; // struct to hold all variables for classification
+    varHolder variables; // object to hold all variables for classification
 };
 
 

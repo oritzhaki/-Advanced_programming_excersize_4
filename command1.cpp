@@ -1,5 +1,6 @@
 #include "command1.h"
-
+#include <thread>
+#include <pthread.h>
 Command1::Command1(DefaultIO* io, varHolder& variables): Command("upload an unclassified csv data file"), io_(io), var(variables) {
     this->io_ = io;
     var.setK(5);
@@ -14,7 +15,9 @@ string Command1::execute() {
         this->var.setTrainDBR(trainData);
         this->io_->write("Upload complete.\nPlease upload your local test CSV file.");
         string testData = this->io_->saveData("test"); // create local server test data file
+        // cout << "IM HERE" << endl;
         this->var.setTestDBR(testData);
+        
         //clear previous classifications if exist:
         this->var.setClassifications({});
     

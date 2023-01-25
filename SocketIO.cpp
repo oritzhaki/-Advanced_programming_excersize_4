@@ -44,19 +44,20 @@ void SocketIO::writeFile(const string& filePath, const string& contents) {
         throw runtime_error("Error: Could not open file: " + filePath);
     }
     file << contents;
+    file.close();
 }
 
 // Method to read a file's contents
 string SocketIO::readFile(const string& filePath) {
     string fileContents;
-    string line;
+    char c;
     ifstream file(filePath, ios::binary);
     if (file.is_open()) {
-        while (getline(file, line))
+        while (file.get(c))
         {
-            fileContents += line;
-            fileContents.push_back('\n');
+            fileContents += c;
         }
+
         file.close();
 
         return fileContents;
@@ -75,18 +76,19 @@ string SocketIO::readFile(const string& filePath) {
 
 // Method to create local server data file
 string SocketIO::saveData(string dataType) {
-    string fileName = dataType + "Set1.csv";
+    string fileName = dataType + "Set.csv";
     
     while(true) {
         string data = this->read();
-        this->write(""); // handle inner logics
-        this->writeFile(fileName, data);
-
-        if (data == "") { // check if finish reading all data
+        // this->write(""); // handle inner logics
+        if (data.length() == 0) { // check if finish reading all data
             break;
         } 
+
+        this->writeFile(fileName, data);
+
+        
     }
-    cout << "finish save data" << endl;
     return fileName; // return the server "local path" of file 
 }
 

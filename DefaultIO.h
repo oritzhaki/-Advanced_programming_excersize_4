@@ -16,6 +16,7 @@ public:
     virtual string saveData(string dataType) {return "";};
     virtual string readFile(const string& filePath) {return "";};
     virtual int writeFromFile(const string& data) {return 0;};
+    
 
 };
 

@@ -26,10 +26,14 @@ void DBReader::read() {
             do {
                 rowTemp.clear();
                 getline(fin, line);   // read an entire row and store it in a string variable 'line'
+                // if(line == "\0" || line == "\n") {
+                //     break;
+                // }
                 stringstream s(line); // break the string up:
                 while (getline(s, word, ',')) {
                     rowTemp.push_back(word);
                 }
+                // pop back -> remove empty line ???????????????
                 this->yTrain.push_back(rowTemp.back()); // extract label and add to ytrain
                 vector<double> features; // holds features of one sample in double converted from rowTemp
                 // convert rowTemp string vector into features double vector

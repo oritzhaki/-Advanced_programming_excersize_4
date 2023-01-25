@@ -10,6 +10,9 @@ void MyServer::handleClient(int sock) { // for individual client
     cli.start();
     delete io; // if we got here user doesn't want to play anymore
     close(sock);
+    cout << "HERE" << endl;
+
+    return;
 }
 
 // the server is activated by: server.out port
@@ -63,12 +66,13 @@ void MyServer::runServer(int argc, char** argv) {
             perror("Server: error accepting client, goodbye!");
             continue; // get new client
         }
-
         active_threads.emplace_back(&MyServer::handleClient, this, client_sock);
         active_threads.back().detach();
+        cout << "In loop" << endl;
     }
-
+    
     for (auto& client_thread : active_threads) {
+        cout << "Thread" << endl;
         client_thread.join();
     }
 

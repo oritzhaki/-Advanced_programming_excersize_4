@@ -23,30 +23,34 @@ void* write_to_file(void* arg){
 void MyClient::sendData(string message, DefaultIO* dio) {
     DefaultIO *io = dio;
     
+    
     cout << message << endl;
     string path;
     getline(cin, path);
-    string fileContant = io->readFile(path);
-
-     // Send the file in chunks
-    int byteSent = 0;
-    int bytesLeft = fileContant.length(); 
-    int BUFFER_SIZE = 4096;
-
-    while (bytesLeft > 0) { // while there are still bytes to send
-        int bytes_to_send = min(BUFFER_SIZE, bytesLeft);
-        int result = io->writeFromFile(fileContant);
-        io->read(); // handle inner logics
-        if (result < 0) {
-            throw false; // file is not valid
-        }
-        byteSent += result;
-        bytesLeft -= result;
+    string fileContent;
+    try {
+        fileContent = io->readFile(path);
+    } catch(...) {
+        throw false;
     }
 
+     // Send the file in chunks
+    int bytesLeft = fileContent.length(); 
+    int BUFFER_SIZE = 4096;
+   
+    // if fileContent is empty ///////////////////
 
-    
-    // write data to server -> write - read empty - loop
+    while (bytesLeft > 0) { // while there are still bytes to send
+        int bytesToSend = min(BUFFER_SIZE, bytesLeft);
+        int result = io->writeFromFile(fileContent);
+        // io->read(); // handle inner logics
+        // if (result < 0) {
+        //     throw false; // file is not valid
+        // }
+        bytesLeft -= result;
+    }
+    io->write("");
+
 }
 
 void MyClient::run(int argc, char** argv) {
@@ -92,12 +96,12 @@ void MyClient::run(int argc, char** argv) {
         if(message == "Please upload your local train CSV file.") {
             try {
                 sendData(message, io); // upload train data
+                this_thread::sleep_for(chrono::milliseconds (100));
                 // read another message from server
-                cout << "finish send train" << endl;
-                io->write(""); // handle inner logics
+                // io->write(""); // handle inner logics
                 string newMessage = io->read();   // iris_classified.csv
-                cout << "new message: " << newMessage << endl;
                 sendData(newMessage, io); // upload test data
+                this_thread::sleep_for(chrono::milliseconds (100));
 
             } catch(...) {
                 cout << "invalid input." << endl; // path doesn't exist
