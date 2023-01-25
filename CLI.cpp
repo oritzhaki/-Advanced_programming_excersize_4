@@ -34,6 +34,7 @@ void CLI::start() {
                 delete c.second; // this is how to delete all new?
             }
             commands.clear();
+            this->io_->write("EXIT");
             break;
         }
         else {

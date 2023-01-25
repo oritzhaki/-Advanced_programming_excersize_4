@@ -10,9 +10,6 @@ void MyServer::handleClient(int sock) { // for individual client
     cli.start();
     delete io; // if we got here user doesn't want to play anymore
     close(sock);
-    cout << "HERE" << endl;
-
-    return;
 }
 
 // the server is activated by: server.out port

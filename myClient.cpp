@@ -113,7 +113,11 @@ void MyClient::run(int argc, char** argv) {
             pthread_detach(download_thread);
             this_thread::sleep_for(chrono::milliseconds (100));
             continue;
-        } else{
+        }
+        else if(message == "EXIT"){
+            break;
+        
+        } else { 
             cout << message << endl;
             getline(cin, input);
             io->write(input);
