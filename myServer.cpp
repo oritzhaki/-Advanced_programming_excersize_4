@@ -65,11 +65,9 @@ void MyServer::runServer(int argc, char** argv) {
         }
         active_threads.emplace_back(&MyServer::handleClient, this, client_sock);
         active_threads.back().detach();
-        cout << "In loop" << endl;
     }
     
     for (auto& client_thread : active_threads) {
-        cout << "Thread" << endl;
         client_thread.join();
     }
 

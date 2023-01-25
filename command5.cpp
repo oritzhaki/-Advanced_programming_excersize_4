@@ -21,6 +21,8 @@ string Command5::execute() {
         // string ready = this->io_->read();
         // if (ready == "READY_TO_SAVE") {
         this->io_->write(out_classifications);
+        this_thread::sleep_for(chrono::milliseconds (100));
+
         // }
         // this->io_->read();
     }
