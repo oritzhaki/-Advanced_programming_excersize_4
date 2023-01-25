@@ -9,6 +9,8 @@ The program uses a main thread to listen for incoming connections from clients. 
 
 The Command design pattern is used to organize the handling of client requests. Each client request is wrapped in a command object, which is then executed by the appropriate handler. This allows for a clear separation of concerns, and makes it easy to add new functionality or modify existing functionality in the future.
 
+There are 38 files we use in this program-
+
 The client has 5 files:
 * client.cpp - Contains the main function that receives arguments from the command line including IP and PORT, creates a client object and runs it. 
 * myClient.cpp & myClient.h - client class which receives from the user input including a vector, distance metric and k (num of neighbors).
@@ -23,13 +25,20 @@ The server has 13 files:
 * distanceMetrics.cpp & distanceMetrics.h - Includes the distance functions from Excercise 1. 
 * serverUtilityFunctions.cpp & serverUtilityFunctions.h- Includes all utility functions that are used by the server.
 
+The Command design pattern has 15 files:
+* CLI.cpp & CLI.h - Responsible for interpreting user input and converting it into command objects that can be executed.
+* command.h - Abstact class where all command* classes inherit from. Like an interface of all commands.
+* command*.h - Each file contains it's own special command class (of the 8 commands that are shown in the server's menu) and it's methods declarations.
+* command*.cpp - Each file contains the implementation of each command's methods.
+* varHolder.cpp & varHolder.h - A class where it's instance will be a member in all the command in order to be able to share information between all commands.
+
+The IO has 3 files:
+* DefaultIO.h - An abstuct class using for input output. All IO inherit from this class. It is like an interface of all IOs. 
+* SockectIO.cpp & Socket.h - input and output functionality that is specifically designed for use with network sockets. SocketIO provides a way to communicate with a server using a web socket.
+
+## How to run
 The correct input from the command line for client: ./client.out IP PORT where IP is the form of A.B.C.D, where A B C D are numbers from 0-255 (The numbers cannot be 0 prefixed unless they are 0) and IP is an int between 1024 and 65535.
-The correct input from the command line for server: ./server.out DATAFILE PORT where DATAFILE is a file with classified data (beans_Classified.csv, iris_classified.csv, wine_Classified.csv) and PORT is an int between 1024 and 65535.
-In order to connect between client and server the PORT number should be the same.
-
-The correct input from the user: VECTOR DISTANCE K where VECTOR includes valid numbers separated by spaces, DISTANCE is one of the following metrics- AUC MAN CHB CAN MIN and K is a valid positive int. The amount of numbers inserted in VECTOR should be the same amount of features from the stated data file (4 features for iris, 13 for wine and 16 for beans). 
-
-All other input is considered invalid.
+The correct input from the command line for server: ./server.out PORT where PORT is an int between 1024 and 65535.
 
 Before you run the program, you need to build it: 
 ```
@@ -49,35 +58,26 @@ To run the program, you need to open three separate terminal windows.
 2. Navigate to the directory where the client file is located.
 3. Run the command: `./client.out IP PORT` e.g. `./client.out 127.0.0.1 8888`
 4. The client will connect to the server. Repeat steps 1-3 for each additional client that you want to connect.
+5. The client will follow the instructions that are shown in the menu from the server.
 
 **Note**: Make sure the server is running before starting the clients and that client connects to the same port as server.
 
-In first terminal insert:
-```
-./server.out DATAFILE PORT
-```
-e.g.
-```
-./server.out iris_classified.csv 5555
-```
-In second terminal insert:
-```
-./client.out IP PORT
-```
-e.g.
-```
-./client.out 127.0.0.1 5555
-```
-then insert your input in the client terminal:
-```
-VECTOR DISTANCE K
-```
-e.g.
-```
-1.1 2.2 3.3 4.4 AUC 3
-```
-if a user wants to insert new inputs they can repeat the last step as many time as wished.
-if a user wants to disconnect between server and client they can insert -1 and the server will wait for a connection to a new client.
+## Example for client interaction with server's menu:
 
+The server will present the client with a menu of 6 options. The client can select one of the options by entering the corresponding number. The server will then execute the command associated with the selected option. The server will then present the menu again and repeat this process. To end the interaction between the server and the client, the user should enter 8, which corresponds to the last command.
+All other input is considered invalid.
+
+
+The client will see the following menu:
+
+![image](https://user-images.githubusercontent.com/118104474/214587711-15b0a355-0337-4f46-a64b-d9ecf7204638.png)
+
+Now the client needs to choose the option from the menu he wants to be execute. Suppose he choose 1-
+He needs to follow the instructions the server gives him according to the option the client choose.
+Here the user gave a valid path to the train set.
+
+![image](https://user-images.githubusercontent.com/118104474/214588588-d7380218-ee60-4058-8006-a73b1b0944b8.png)
+
+So it goes. The user needs to choose the option and to insert valid input according to the server's requests.
 
 
