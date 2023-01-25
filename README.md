@@ -1,7 +1,13 @@
-# Exercise_3
-__Client-Server practice__
+# Exercise 4
+__MultiClient-Server practice__
 
-We created a program that practises client-server interactions and runs KNN algorithm on the server with user input received from the client.
+This program is a multi-client server application that allows multiple clients to interact with a single server simultaneously. The program utilizes a thread pool to handle multiple connections at the same time, and implements the Command design pattern to organize the handling of client requests.
+
+## How it works
+
+The program uses a main thread to listen for incoming connections from clients. When a client connects, a task is added to the thread pool, where it is executed by one of the available threads. This allows the server to handle multiple clients at the same time, and reduces the overhead of creating and destroying threads for each client connection.
+
+The Command design pattern is used to organize the handling of client requests. Each client request is wrapped in a command object, which is then executed by the appropriate handler. This allows for a clear separation of concerns, and makes it easy to add new functionality or modify existing functionality in the future.
 
 The client has 5 files:
 * client.cpp - Contains the main function that receives arguments from the command line including IP and PORT, creates a client object and runs it. 
@@ -29,7 +35,23 @@ Before you run the program, you need to build it:
 ```
 make
 ```
-Then, run in 2 different terminals the client and the server.
+
+To run the program, you need to open three separate terminal windows.
+
+## Running the Server
+1. Open a terminal window.
+2. Navigate to the directory where the server file is located.
+3. Run the command: `./server.out PORT` e.g. `./server.out 8888`
+4. The server will start running and will be ready to accept connections from clients.
+
+## Running the Clients
+1. Open another terminal window.
+2. Navigate to the directory where the client file is located.
+3. Run the command: `./client.out IP PORT` e.g. `./client.out 127.0.0.1 8888`
+4. The client will connect to the server. Repeat steps 1-3 for each additional client that you want to connect.
+
+**Note**: Make sure the server is running before starting the clients and that client connects to the same port as server.
+
 In first terminal insert:
 ```
 ./server.out DATAFILE PORT
