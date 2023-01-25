@@ -97,7 +97,7 @@ void SocketIO::saveData(string fileName) {
         if(bytes_received == buffer_size) {
             buffer_size *= 2;
             char * new_buffer = new char[buffer_size];
-            memcpy(new_buffer, buffer, buffer_size / 2);
+            memcpy(new_buffer, buffer, buffer_size);
             delete[] buffer;
             buffer = new_buffer;
 
@@ -109,6 +109,7 @@ void SocketIO::saveData(string fileName) {
     return;
     }
     message.append(buffer, bytes_received);
+    std::cout << "message:" << message << "." << std::endl;
     if(message.size() == 1) { // if message is empty it means that there is invalid path in client side so abort
         cout << "inside" << endl;
         throw false;

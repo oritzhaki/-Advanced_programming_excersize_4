@@ -5,8 +5,8 @@
 
 void* write_to_file(void* arg){
     try{
-        mutex mutex_;
-        std::lock_guard<std::mutex> lock(mutex_);
+        // mutex mutex_;
+        // std::lock_guard<std::mutex> lock(mutex_);
         int sock = *((int*) arg);
         DefaultIO *io = new SocketIO(sock);
         io->write("READY_TO_SAVE");
