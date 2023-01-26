@@ -11,6 +11,7 @@ CLI::CLI(DefaultIO* io): variables() {
 }
 
 void CLI::start() {
+    cout << "IN CLI BEGIN BEFORE MENU" << endl;
     // create menu
     string menu = "\nWelcome to the KNN Classifier Server. Please choose an option:\n";
     for (pair<string,Command*> c : commands) {

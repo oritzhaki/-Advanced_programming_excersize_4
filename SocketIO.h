@@ -21,10 +21,8 @@ private:
 
 public:
     SocketIO(int client_sock);
-    // void connect(const char* ipAddress, int port);
     string read();
     void write(const string& data);
-    int writeFromFile(const string& data);
     void writeFile(const string& filePath, const string& contents);
     void saveData(string dataType);
     string readFile(const string& filePath);

@@ -28,5 +28,6 @@ public:
     void runServer(int argc, char** argv);
     
 };
-
+int acceptClient(int sock);
+int listenToPort(int port); 
 #endif

@@ -19,9 +19,35 @@ string Command5::execute() {
         }
         
         this->io_->write("upload results:");
+
+         // generate random port and send to client in range (10,000-60,000)
+        std::random_device rd;
+        std::mt19937 rng(rd());
+        std::uniform_int_distribution<int> uni(0, 50000);
+        // send the new port to client so they can both know the new one
+        auto random_integer = uni(rng);
+        int port = 10000 + random_integer;
+        
+        int sock = listenToPort(port);
+        this->io_->write(to_string(port)); // send new port to client
+        int client_sock = acceptClient(sock);
+
+        
         // string ready = this->io_->read();
         // if (ready == "READY_TO_SAVE") {
-        this->io_->write(out_classifications);
+        // send file to client and close sockets
+        thread t([client_sock, out_classifications]() {
+            cout << "IN SERVER THREAD" << endl;
+            SocketIO* sio = new SocketIO(client_sock);
+            sio->write(out_classifications);
+            delete sio;
+            close(client_sock);
+            cout << "FINISH SERVER THREAD" << endl;
+
+            
+        });
+        t.detach();
+        
         // this_thread::sleep_for(chrono::milliseconds (100));
         return "";
         // }

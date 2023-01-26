@@ -2,7 +2,7 @@
 #define ADVANCED_PROGRAMMING_EXERSIZE_4_COMMAND5_H
 
 #include "command.h"
-
+#include "myServer.h"
 class Command5: public Command{
 private:
     DefaultIO* io_;

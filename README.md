@@ -82,9 +82,11 @@ user will write a valid path of his local train data and then another path of hi
 ```
 /train_path
 ```
->Upload complete.>Please upload your local test CSV file.
+>Upload complete.
+
+>Please upload your local test CSV file.
 ```
-/train_path
+/test_path
 ```
 >Upload complete.
 

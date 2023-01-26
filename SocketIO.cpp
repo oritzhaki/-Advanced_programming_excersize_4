@@ -3,44 +3,6 @@
 SocketIO::SocketIO(int client_sock): socket(client_sock) {}
 
 string SocketIO::read() {
-    // char * buffer = new char[this->BUFFER_SIZE];
-    // memset(buffer,0,this->BUFFER_SIZE);
-    // string message;
-    // int read_bytes;
-    // do {
-    //     read_bytes = recv(this->socket, buffer, this->BUFFER_SIZE, 0);
-    //     if(read_bytes < 0) {
-    //         return "Server: error reading from socket, goodbye!";
-    //     }
-    //     if(buffer[0] == '\0') { // buffer is empty
-    //         break;
-    //     }
-    //     message += buffer;
-    // } while (read_bytes > 0); 
-    
-    // delete[] buffer;
-    // return message;
-
-    ////////////////////////////////
-    /// WORKS BUT NOT FOR BEANS ////
-    ////////////////////////////////
-
-    // char * buffer = new char[this->BUFFER_SIZE];
-    // memset(buffer,0,this->BUFFER_SIZE);
-    // int read_bytes = recv(this->socket, buffer, this->BUFFER_SIZE, 0);
-    // if(read_bytes < 0){
-    //     return "Server: error reading from socket, goodbye!";
-    // }
-    // buffer[read_bytes] = '\0';
-    // string output = string(buffer);
-    // //cout << "in socketio read: " << output << endl;
-    // delete[] buffer;
-    // return output;
-
-
-    ////////////////////////////////////////
-    /////// WORKS BUT //////////////////
-    ////////////////////////////////////////
 
     string message;
     int bytes_received = 0;
@@ -81,17 +43,6 @@ void SocketIO::write(const string& data) {
     }
 }
 
-// Method to write data to the socket
-int SocketIO::writeFromFile(const string& data) {
-    const string& output = data;
-    //cout << "in socketio write: " << string(output) << endl;
-    int sentBytes = send(this->socket, output.c_str(), output.size() + 1, 0);
-    if (sentBytes < 0){   // send fails
-        perror("Server: error sending to client, goodbye!");
-    }
-    return sentBytes;
-}
-
 // Method to write a string to a file
 void SocketIO::writeFile(const string& filePath, const string& contents) {
     ofstream file(filePath);
@@ -129,14 +80,6 @@ void SocketIO::saveData(string fileName) {
 
     while ((bytes_received = recv(this->socket, buffer, buffer_size, 0)) > 0) {
         if(bytes_received == buffer_size) {
-            // total += bytes_received;
-            // buffer_size *= 2;
-            // char * new_buffer = new char[buffer_size];
-            // memset(new_buffer, 0, sizeof(new_buffer));
-            // memcpy(new_buffer, buffer, buffer_size);
-            
-            // buffer = new_buffer;
-            // delete[] new_buffer;
             message.append(buffer, bytes_received);
         } else { message.append(buffer, bytes_received);break;}
     }
