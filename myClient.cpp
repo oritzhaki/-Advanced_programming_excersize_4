@@ -2,10 +2,6 @@
 #include "clientUtilityFunctions.h"
 #include <mutex>
 
-struct thread_args {
-    int sock;
-    string path;
-};
 
 void* Data(void* args) {
     thread_args* arg = (struct thread_args*) args;
@@ -60,7 +56,7 @@ void write_to_file(int sock){
     try{
         pthread_t download_thread;
         DefaultIO *io = new SocketIO(sock);
-        io->write("READY_TO_SAVE");
+        // io->write("READY_TO_SAVE");
         // DefaultIO* io = ((DefaultIO*) arg);
         // io->write("");
         string path;
@@ -132,16 +128,16 @@ void MyClient::run(int argc, char** argv) {
     DefaultIO *io = new SocketIO(client_socket);
     while(true){
         string input;
+        // cout << "BEFORE READ" << endl;
         string message = io->read();
+        // cout << "AFTER READ" << endl;
         if(message == "Please upload your local train CSV file.") {
             try {
+                this_thread::sleep_for(std::chrono::milliseconds(100));
                 sendData(message, io); // upload train data
-                // this_thread::sleep_for(chrono::milliseconds (100));
                 // read another message from server
-                // io->write(""); // handle inner logics
                 string newMessage = io->read();   // iris_classified.csv
                 sendData(newMessage, io); // upload test data
-                // this_thread::sleep_for(chrono::milliseconds (100));
 
             } catch(...) {
                  // path doesn't exist

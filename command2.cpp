@@ -33,12 +33,10 @@ string Command2::execute(){
     this->io_->write(msg);
     string input;
     try {
-        input = this->io_->read();
+        string input = this->io_->read();
     } catch(...) {
-        // if here user didn't want to change settings
-        return "";
+        
     }
-     
     cout << "cmd2 input: " << input << " .";
     if(!(input == "")){// the user entered "K MET"
         //break up the input

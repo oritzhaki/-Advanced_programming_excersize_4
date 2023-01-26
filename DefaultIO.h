@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include "reader.h"
+#include <thread>
+#include <chrono>
 
 using namespace std;
 

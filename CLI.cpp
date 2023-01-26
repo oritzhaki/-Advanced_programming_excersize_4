@@ -20,7 +20,9 @@ void CLI::start() {
     menu = menu + "8. exit\n";
     string tempmenu = menu;
     while (true) {
+        cout << "IN CLI START" << endl;
         this->io_->write(tempmenu); // print menu
+        cout << "AFTER WRITE" << endl;
         string input = this->io_->read(); // get user choice - input
         if (input == "1" || input == "2" || input == "3" || input == "4" || input == "5") {
             //cout << "im in cli correct inputs" << endl;

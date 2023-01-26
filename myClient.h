@@ -19,12 +19,17 @@
 #include "DefaultIO.h"
 
 using namespace std;
+struct thread_args {
+    int sock;
+    string path;
+};
 
 class MyClient {
 public:    
     // MyClient() {};
     void run(int argc, char** argv);
     void sendData(string message, DefaultIO* io);
+    thread_args args;
 };
 
 

@@ -17,6 +17,7 @@ string Command5::execute() {
             out_row = to_string(c.first) + "\t" + c.second + "\n";
             out_classifications = out_classifications + out_row;
         }
+        
         this->io_->write("upload results:");
         // string ready = this->io_->read();
         // if (ready == "READY_TO_SAVE") {
