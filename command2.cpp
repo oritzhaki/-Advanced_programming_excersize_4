@@ -31,7 +31,14 @@ bool isMetricValid(string met, string& new_metric) {
 string Command2::execute(){
     string msg = "The current KNN parameters are: K = " + to_string(this->var.getK()) + ", distance metric = " + this->var.getMetric();
     this->io_->write(msg);
-    string input = this->io_->read();
+    string input;
+    try {
+        input = this->io_->read();
+    } catch(...) {
+        // if here user didn't want to change settings
+        return "";
+    }
+     
     cout << "cmd2 input: " << input << " .";
     if(!(input == "")){// the user entered "K MET"
         //break up the input

@@ -21,14 +21,15 @@ void CLI::start() {
     string tempmenu = menu;
     while (true) {
         this->io_->write(tempmenu); // print menu
-        string input = this->io_->read(); // get user choice - input
-        if (input == "1" || input == "2" || input == "3" || input == "4" || input == "5") {
+        int input = stoi(this->io_->read()); // get user choice - input
+        if (input >=1 && input <= 5) {
             //cout << "im in cli correct inputs" << endl;
-            Command* command = commands.at(input); // get the wanted command from map
+            Command* command = commands.at(to_string(input)); // get the wanted command from map
             string additional_string = command->execute();
+            cout << "ADDITION\n" << additional_string  << "\n#########"<< endl;
             tempmenu = additional_string + menu;// after finish a command print menu again
         }
-        else if (input == "8") {
+        else if (input == 8) {
             // close connection to server
             for(pair<string,Command*> c : commands) {
                 delete c.second; // this is how to delete all new?
@@ -38,6 +39,7 @@ void CLI::start() {
             break;
         }
         else {
+            cout << "IM HERE" << endl;
             tempmenu = "invalid input\n" + menu;
         }
     }

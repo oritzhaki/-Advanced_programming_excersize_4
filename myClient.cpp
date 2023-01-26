@@ -2,25 +2,78 @@
 #include "clientUtilityFunctions.h"
 #include <mutex>
 
+struct thread_args {
+    int sock;
+    string path;
+};
 
-void* write_to_file(void* arg){
+void* Data(void* args) {
+    thread_args* arg = (struct thread_args*) args;
+    int socket = arg->sock;
+    string path = arg->path;
+    DefaultIO* io = new SocketIO(socket);
+
+    string message;
+    int bytes_received = 0;
+    int total = 0;
+    int buffer_size = 4096;
+    char * buffer = new char[buffer_size];
+    memset(buffer, 0, sizeof(buffer));
+        
+    while ((bytes_received = recv(socket, buffer, buffer_size, 0)) > 0) {
+        if(bytes_received == buffer_size) {
+            // total += bytes_received;
+            // buffer_size *= 2;
+            // char * new_buffer = new char[buffer_size];
+            // memset(new_buffer, 0, sizeof(new_buffer));
+            // memcpy(new_buffer, buffer, buffer_size);
+            // buffer = new_buffer;
+            // delete[] new_buffer;
+            message.append(buffer, bytes_received);
+
+        }else {
+            message.append(buffer, bytes_received);
+            break;
+        }
+    }
+    if (bytes_received < 0) {
+        void* result;
+        pthread_exit(result);
+    }
+    std::cout << "message:" << message << "." << std::endl;
+    if(message.size() == 1) { // if message is empty it means that there is invalid path in client side so abort
+        cout << "inside" << endl;
+        throw false;
+    }
+    std::cout << message.size() << std::endl;
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    // cout << "Buffer:" << buffer << "." << endl;
+    delete[] buffer;
+    io->writeFile(path, message); // write local file
+    // cout << "AFTER WRITE FILE" << endl;
+    void* result;
+    pthread_exit(result); 
+}
+
+void write_to_file(int sock){
     try{
-        // mutex mutex_;
-        // std::lock_guard<std::mutex> lock(mutex_);
-        int sock = *((int*) arg);
+        pthread_t download_thread;
         DefaultIO *io = new SocketIO(sock);
         io->write("READY_TO_SAVE");
         // DefaultIO* io = ((DefaultIO*) arg);
         // io->write("");
         string path;
         getline(cin, path); // get path from user to save results
-        io->saveData(path); // save data in the local path
+        thread_args args = {sock, path};
+        pthread_create(&download_thread, NULL, Data, (void*) &args); 
+        pthread_detach(download_thread);
+        this_thread::sleep_for(chrono::milliseconds (100));
         // io->write("");
         delete io;
     }catch(runtime_error& e){
         cout << e.what();
     }
-    return 0;
 }
 
 // Method to send local data from client to server
@@ -38,23 +91,6 @@ void MyClient::sendData(string message, DefaultIO* dio) {
     }
 
     io->write(fileContent);
-
-    //  // Send the file in chunks
-    // int bytesLeft = fileContent.length(); 
-    // int BUFFER_SIZE = 4096;
-   
-    // // if fileContent is empty ///////////////////
-
-    // while (bytesLeft > 0) { // while there are still bytes to send
-    //     int bytesToSend = min(BUFFER_SIZE, bytesLeft);
-    //     int result = io->writeFromFile(fileContent);
-    //     // io->read(); // handle inner logics
-    //     // if (result < 0) {
-    //     //     throw false; // file is not valid
-    //     // }
-    //     bytesLeft -= result;
-    // }
-    // io->write("");
 
 }
 
@@ -93,7 +129,6 @@ void MyClient::run(int argc, char** argv) {
         return;
     }
 
-    pthread_t download_thread;
     DefaultIO *io = new SocketIO(client_socket);
     while(true){
         string input;
@@ -101,12 +136,12 @@ void MyClient::run(int argc, char** argv) {
         if(message == "Please upload your local train CSV file.") {
             try {
                 sendData(message, io); // upload train data
-                this_thread::sleep_for(chrono::milliseconds (100));
+                // this_thread::sleep_for(chrono::milliseconds (100));
                 // read another message from server
                 // io->write(""); // handle inner logics
                 string newMessage = io->read();   // iris_classified.csv
                 sendData(newMessage, io); // upload test data
-                this_thread::sleep_for(chrono::milliseconds (100));
+                // this_thread::sleep_for(chrono::milliseconds (100));
 
             } catch(...) {
                  // path doesn't exist
@@ -115,9 +150,7 @@ void MyClient::run(int argc, char** argv) {
             continue;    
         } 
         else if(message == "upload results:"){
-            pthread_create(&download_thread, NULL, write_to_file, (void*) &client_socket); // can change to send io instead socket????
-            pthread_detach(download_thread);
-            this_thread::sleep_for(chrono::milliseconds (100));
+            write_to_file(client_socket);
             continue;
         }
         else if(message == "EXIT"){ // user pressed 8 so exit
@@ -129,25 +162,6 @@ void MyClient::run(int argc, char** argv) {
             io->write(input);
         }
     }
-//    pthread_t receive_thread; // create a receive thread
-//    pthread_t send_thread; // create a send thread
-//    // create the thread data:
-//    ThreadData data;
-//    data.io = new SocketIO(client_socket);
-//    data.socket = client_socket;
-//    pthread_mutex_init(&data.mutex, NULL);
-//    pthread_cond_init(&data.cond, NULL);
-//    while (!data.messages.empty()) {
-//        data.messages.pop();
-//    }
-    // send threads to interact with server
-//    pthread_create(&receive_thread, NULL, receive_from_server, &data);
-//    pthread_create(&send_thread, NULL, send_to_server, &data);
-
-    // wait for the receive thread to finish
-//    pthread_join(receive_thread, NULL);
-//    pthread_join(send_thread, NULL);
-    //pthread_mutex_destroy();
 
     delete io;
 
