@@ -16,27 +16,16 @@ string SocketIO::read() {
     // return output;
     string message;
     int bytes_received = 0;
-    int total = 0;
+    string str;
     char * buffer = new char[this->BUFFER_SIZE];
     memset(buffer, 0, sizeof(buffer));
 
     while ((bytes_received = recv(this->socket, buffer, this->BUFFER_SIZE, 0)) > 0) {
         if(bytes_received == this->BUFFER_SIZE) {
-            // total += bytes_received;
-            // buffer_size *= 2;
-            // char * new_buffer = new char[buffer_size];
-            // memset(new_buffer, 0, sizeof(new_buffer));
-            // memcpy(new_buffer, buffer, buffer_size);
-            
-            // buffer = new_buffer;
-            // delete[] new_buffer;
-            string str = string(buffer);
-            cout << "STR:" << str << endl;
+            str = string(buffer);
             message.append(str);
         }else {
-            string str = string(buffer);
-            cout << "STR:" << str << endl;
-
+            str = string(buffer);
             message.append(str);
             break;
         }
@@ -44,23 +33,12 @@ string SocketIO::read() {
     if (bytes_received < 0) {
     return "";
     }
-    // message.append(buffer, bytes_received + total);
-    // std::cout << "message:" << message << "." << std::endl;
+ 
     if(message.size() == 0) { // if message is empty it means that there is invalid path in client side so abort
         cout << "inside" << endl;
         throw false;
     }
-    // if(message.find("\0") != string::npos) {
-    //     cout << "ARRIVE TO LINE 50" << endl;
-    //     std::cout << message.size() << std::endl;
-    //     size_t pos = message.find("\0");
-    //     message = message.substr(0,pos-1);
-    //     std::cout << message.size() << std::endl;
-    // }
-    // std::cout << message.size() << std::endl;
-    
-    // std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    // cout << "Buffer:" << buffer << "." << endl;
+
     delete[] buffer;
     return message;
 }
