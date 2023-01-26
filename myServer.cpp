@@ -5,37 +5,11 @@ MyServer::MyServer(){
 }
 
 void MyServer::handleClient(int sock) { // for individual client
-    cout << "IN HANDLE" << endl;
     DefaultIO *io = new SocketIO(sock);
     CLI cli(io);
     cli.start();
     delete io; // if we got here user doesn't want to play anymore
     close(sock);
-}
-
-int socketCreation(int server_port) {
-    int sock = socket(AF_INET, SOCK_STREAM, 0); // sock is the socket descriptor (socket ID)
-    // SOCKSTREAM is communication type TPC. AF_NET is the communication domain for IPV4 (IP of different hosts)
-    if(sock < 0){ // creation fails
-        perror("Server: error creating socket, goodbye!");
-        return -1;
-    }
-
-    struct sockaddr_in sin; // the socket address (IP+port)
-    memset(&sin, 0, sizeof(sin)); // sets sin to zeros
-    sin.sin_family = AF_INET;
-    sin.sin_addr.s_addr = INADDR_ANY;
-    sin.sin_port = htons(server_port); // converts port to bytes
-    if(::bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0){  // binding socket to port
-        perror("Server: error binding socket, goodbye!");
-        return -1;
-    }
-
-    if(listen(sock, 100) < 0){ // puts the server socket in a passive mode and waits for the client to make a connection.
-        perror("Server: error listening to socket, goodbye!");
-        return -1;
-    }
-    return sock;
 }
 
 // the server is activated by: server.out port
@@ -56,10 +30,32 @@ void MyServer::runServer(int argc, char** argv) {
         return;
     }
 
+    int sock = socket(AF_INET, SOCK_STREAM, 0); // sock is the socket descriptor (socket ID)
+    // SOCKSTREAM is communication type TPC. AF_NET is the communication domain for IPV4 (IP of different hosts)
+    if(sock < 0){ // creation fails
+        perror("Server: error creating socket, goodbye!");
+        return;
+    }
+
+    struct sockaddr_in sin; // the socket address (IP+port)
+    memset(&sin, 0, sizeof(sin)); // sets sin to zeros
+    sin.sin_family = AF_INET;
+    sin.sin_addr.s_addr = INADDR_ANY;
+    sin.sin_port = htons(server_port); // converts port to bytes
+    if(::bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0){  // binding socket to port
+        perror("Server: error binding socket, goodbye!");
+        return;
+    }
+
+    if(listen(sock, 100) < 0){ // puts the server socket in a passive mode and waits for the client to make a connection.
+        perror("Server: error listening to socket, goodbye!");
+        return;
+    }
+
     vector<thread> active_threads; // the thread pool
-    int sock;
+
     while(true) { // new client - new thread
-        int sock = socketCreation(server_port); // create different socket for each client
+
         struct sockaddr_in client_sin; // the socket address (IP+port)
         unsigned int addr_len = sizeof(client_sin);
         int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len); // create connection socket, ready to transfer data

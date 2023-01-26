@@ -35,53 +35,53 @@ string Command2::execute(){
     try {
         string input = this->io_->read();
     } catch(...) {
-        
+        return "";   // if user pressed ENTER, will go straight to here
+
     }
     cout << "cmd2 input: " << input << " .";
-    if(!(input == "")){// the user entered "K MET"
-        //break up the input
-        vector<string> words;
-        size_t start = 0, end = 0;
-        while ((end = input.find(" ", start)) != string::npos) {
-            words.push_back(input.substr(start, end - start));
-            start = end + 1;
-        }
-        words.push_back(input.substr(start));
-
-        //check validity:
-
-        string k_invalid_msg = "invalid value for K\n";
-        string met_invalid_msg = "invalid value for metric\n";
-        bool k_valid = true;
-        bool met_valid = true;
-        string rtrn_message = "";
-
-        //general validity:
-        if(words.size() != 2){ // check correct order of inputs???
-            return "invalid input.\n"; //////////////
-        }
-
-        // k validity:
-        int newK;
-        if(!isKValid(words[0], newK) && !isKValid(words[1], newK)) {
-            rtrn_message = k_invalid_msg;
-            k_valid = false;
-        }
-            
-
-        //metric validity:
-        string new_metric;
-        if(!isMetricValid(words[0], new_metric) && !isMetricValid(words[1], new_metric)) {
-            rtrn_message = rtrn_message + met_invalid_msg;
-            met_valid = false;
-        }
-
-        // update vals only if all is valid:
-        if(k_valid && met_valid){
-            this->var.setK(newK);
-            this->var.setMetric(new_metric);
-        }
-        return rtrn_message;
+   
+    //break up the input
+    vector<string> words;
+    size_t start = 0, end = 0;
+    while ((end = input.find(" ", start)) != string::npos) {
+        words.push_back(input.substr(start, end - start));
+        start = end + 1;
     }
-    return ""; // if user pressed ENTER, will go straight to here
+    words.push_back(input.substr(start));
+
+    //check validity:
+
+    string k_invalid_msg = "invalid value for K\n";
+    string met_invalid_msg = "invalid value for metric\n";
+    bool k_valid = true;
+    bool met_valid = true;
+    string rtrn_message = "";
+
+    //general validity:
+    if(words.size() != 2){ // check correct order of inputs???
+        return "invalid input.\n"; //////////////
+    }
+
+    // k validity:
+    int newK;
+    if(!isKValid(words[0], newK) && !isKValid(words[1], newK)) {
+        rtrn_message = k_invalid_msg;
+        k_valid = false;
+    }
+        
+
+    //metric validity:
+    string new_metric;
+    if(!isMetricValid(words[0], new_metric) && !isMetricValid(words[1], new_metric)) {
+        rtrn_message = rtrn_message + met_invalid_msg;
+        met_valid = false;
+    }
+
+    // update vals only if all is valid:
+    if(k_valid && met_valid){
+        this->var.setK(newK);
+        this->var.setMetric(new_metric);
+    }
+    return rtrn_message;
+    
 }
