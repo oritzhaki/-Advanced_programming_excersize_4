@@ -7,7 +7,7 @@ CLI::CLI(DefaultIO* io): variables() {
     commands.insert({"3", new Command3(this->io_, variables)});
     commands.insert({"4", new Command4(this->io_, variables)});
     commands.insert({"5", new Command5(this->io_, variables)});
-    // commands.insert({"8", new Command5(this->io_, variables)});
+    commands.insert({"8", new Command8(this->io_, variables)});
 }
 
 void CLI::start() {
@@ -18,9 +18,9 @@ void CLI::start() {
         //make string to send
         menu = menu + c.first + ". " + c.second->getDescription() + "\n";
     }
-    menu = menu + "8. exit\n";
+    // menu = menu + "8. exit\n";
     string tempmenu = menu;
-    while (true) {
+    while (variables.work) {
         cout << "IN CLI START" << endl;
         this->io_->write(tempmenu); // print menu
         cout << "AFTER WRITE" << endl;
@@ -32,6 +32,8 @@ void CLI::start() {
             tempmenu = additional_string + menu;// after finish a command print menu again
         }
         else if (input == "8") {
+            Command* command = commands.at(input); // get the wanted command from map
+            string additional_string = command->execute();
             // close connection to server
             for(pair<string,Command*> c : commands) {
                 delete c.second; // this is how to delete all new?

@@ -8,6 +8,7 @@
 #include "command3.h"
 #include "command4.h"
 #include "command5.h"
+#include "command8.h"
 #include "DefaultIO.h"
 #include "varHolder.h"
 #include <map>

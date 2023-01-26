@@ -23,6 +23,7 @@ public:
     void setTestDBR(string filepath);
     vector<pair<int, string>> getClassifications();
     void setClassifications(vector<pair<int, string>> classified_data);
+    bool work = true;
 };
 
 
