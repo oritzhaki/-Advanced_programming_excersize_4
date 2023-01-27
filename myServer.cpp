@@ -107,7 +107,6 @@ void MyServer::runServer(int argc, char** argv) {
             perror("Server: error accepting client, goodbye!");
             continue; // get new client
         }
-        // cout << "HERE" << endl;
         active_threads.emplace_back(&MyServer::handleClient, this, client_sock);
         active_threads.back().detach();
     }

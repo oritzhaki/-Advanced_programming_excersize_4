@@ -23,7 +23,6 @@ void CLI::start() {
         this_thread::sleep_for(std::chrono::milliseconds(100));
         string input = this->io_->read(); // get user choice - input
         if (input == "1" || input == "2" || input == "3" || input == "4" || input == "5") {
-            //cout << "im in cli correct inputs" << endl;
             Command* command = commands.at(input); // get the wanted command from map
             string additional_string = command->execute();
             tempmenu = additional_string + menu;// after finish a command print menu again
@@ -40,7 +39,6 @@ void CLI::start() {
             break;
         }
         else {
-            // cout << "IM HERE" << endl;
             tempmenu = "invalid input\n" + menu;
         }
     }
