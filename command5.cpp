@@ -34,7 +34,6 @@ string Command5::execute() {
         // send file to client and close sockets
         thread myThread([sock, out_classifications]() {
             int client_sock = sockAccept(sock);
-            this_thread::sleep_for(std::chrono::milliseconds(100));
             SocketIO* sio = new SocketIO(client_sock);
             sio->write(out_classifications);
             delete sio;
@@ -42,6 +41,7 @@ string Command5::execute() {
             
         });
         myThread.detach();
+        this_thread::sleep_for(std::chrono::milliseconds(100));
         return "";
     
     }
