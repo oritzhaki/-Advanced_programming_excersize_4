@@ -25,7 +25,7 @@ string SocketIO::read() {
     }
 
     if(message.size() == 0) { // if message is empty it means that there is invalid path in client side so abort
-        cout << "inside" << endl;
+        // cout << "inside" << endl;
         throw false;
     }
 
@@ -86,10 +86,10 @@ void SocketIO::saveData(string fileName) {
     if(bytes_received < 0) {return;}
     
     if(message.size() == 1) { // if message is empty it means that there is invalid path in client side so abort
-        cout << "inside" << endl;
+        // cout << "inside" << endl;
         throw false;
     }
-    std::cout << message.size() << std::endl;
+    // std::cout << message.size() << std::endl;
 
     delete[] buffer;
     // string message = this->read();
@@ -97,8 +97,3 @@ void SocketIO::saveData(string fileName) {
    
 }
 
-// Method to close the socket
-void SocketIO::close() {
-    ::shutdown(this->socket, SHUT_RDWR);
-    ::close(this->socket);
-}

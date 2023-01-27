@@ -11,7 +11,6 @@ CLI::CLI(DefaultIO* io): variables() {
 }
 
 void CLI::start() {
-    cout << "IN CLI BEGIN BEFORE MENU" << endl;
     // create menu
     string menu = "\nWelcome to the KNN Classifier Server. Please choose an option:\n";
     for (pair<string,Command*> c : commands) {
@@ -20,9 +19,8 @@ void CLI::start() {
     }
     string tempmenu = menu;
     while (variables.work) {
-        cout << "IN CLI START" << endl;
         this->io_->write(tempmenu); // print menu
-        cout << "AFTER WRITE" << endl;
+        this_thread::sleep_for(std::chrono::milliseconds(100));
         string input = this->io_->read(); // get user choice - input
         if (input == "1" || input == "2" || input == "3" || input == "4" || input == "5") {
             //cout << "im in cli correct inputs" << endl;
@@ -42,7 +40,7 @@ void CLI::start() {
             break;
         }
         else {
-            cout << "IM HERE" << endl;
+            // cout << "IM HERE" << endl;
             tempmenu = "invalid input\n" + menu;
         }
     }
