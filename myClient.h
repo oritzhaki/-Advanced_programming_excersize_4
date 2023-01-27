@@ -26,7 +26,6 @@ struct thread_args {
 
 class MyClient {
 public:    
-    // MyClient() {};
     void run(int argc, char** argv);
     void sendData(string message, DefaultIO* io);
     thread_args args;
