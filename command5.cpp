@@ -25,27 +25,22 @@ string Command5::execute() {
         std::mt19937 rng(rd());
         std::uniform_int_distribution<int> uni(0, 50000);
         // send the new port to client so they can both know the new one
-        auto random_integer = uni(rng);
-        int port = 10000 + random_integer;
+        auto randomNum = uni(rng);
+        int port = 10000 + randomNum;
         
         int sock = creatServerSock(port);
         this->io_->write(to_string(port)); // send new port to client
-        cout << "CLIENT CONNECTED" << endl;
 
         // send file to client and close sockets
         thread myThread([sock, out_classifications]() {
-            cout << "IN SERVER THREAD" << endl;
             int client_sock = sockAccept(sock);
             SocketIO* sio = new SocketIO(client_sock);
             sio->write(out_classifications);
             delete sio;
             close(client_sock);
-            cout << "FINISH SERVER THREAD" << endl;
             
         });
-        cout << "BEFORE DETACH SERVER THREAD" << endl;
         myThread.detach();
-        cout << "AFTER DETACH SERVER THREAD" << endl;
         return "";
     
     }
