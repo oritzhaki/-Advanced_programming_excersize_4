@@ -32,8 +32,6 @@ void CLI::start() {
             tempmenu = additional_string + menu;// after finish a command print menu again
         }
         else if (input == "8") {
-            Command* command = commands.at(input); // get the wanted command from map
-            string additional_string = command->execute();
             // close connection to server
             for(pair<string,Command*> c : commands) {
                 delete c.second; // this is how to delete all new?

@@ -4,26 +4,27 @@ MyServer::MyServer(){
     this->threadStatus.resize(this->THREAD_POOL_SIZE, true);
 }
 
-int acceptClient(int sock) {
+int sockAccept(int sock) {
     struct sockaddr_in client_sin; /* address struct for the sender info */
     unsigned int addr_len = sizeof (client_sin);
     /* accept creates a new client socket for the connecting client */
     int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len);
     if (client_sock < 0) {
         perror("Error accepting client");
-        exit(-1);
+        return -1;
     }
     return client_sock;
 }
 
 
-int listenToPort(int port) {
+int creatServerSock(int port) {
     const int server_port = port;
     // socket creation, sock_stream is a const for TCP
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("Error creating socket");
-        exit(-1);
+        return -1;
+       
     }
 
     /* creating the struct for the address */
@@ -36,12 +37,13 @@ int listenToPort(int port) {
     /* binding the socket to the port and ip_address, while checking it can be done */
     if (bind(sock, (struct sockaddr *) &server_sin, sizeof (server_sin)) < 0) {
         perror("Error binding socket");
-        exit(-1);
+        return -1;
     }
     /* listens up to 5 clients at a time */
     if (listen(sock, 5) < 0) {
         perror("Error listening to a socket");
-        exit(-1);
+        return -1;
+
     }
     return sock;
 }

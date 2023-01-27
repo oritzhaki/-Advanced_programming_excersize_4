@@ -28,23 +28,19 @@ string Command5::execute() {
         auto random_integer = uni(rng);
         int port = 10000 + random_integer;
         
-        int sock = listenToPort(port);
+        int sock = creatServerSock(port);
         this->io_->write(to_string(port)); // send new port to client
-        int client_sock = acceptClient(sock);
 
         // send file to client and close sockets
-        thread t([client_sock, out_classifications]() {
-            cout << "IN SERVER THREAD" << endl;
+        thread myThread([sock, out_classifications]() {
+            int client_sock = sockAccept(sock);
             SocketIO* sio = new SocketIO(client_sock);
             sio->write(out_classifications);
             delete sio;
             close(client_sock);
-            cout << "FINISH SERVER THREAD" << endl;
-
             
         });
-        t.detach();
-        
+        myThread.detach();
         return "";
     
     }
