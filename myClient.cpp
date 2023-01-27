@@ -92,6 +92,7 @@ void MyClient::run(int argc, char** argv) {
              // download file in a separate thread to allow user to continue sending requests
             thread client_thread([newSock, path]() {
                 SocketIO* sio = new SocketIO(newSock);
+                this_thread::sleep_for(std::chrono::milliseconds(100));
                 sio->saveData(path);
                 delete sio;
                 close(newSock);
