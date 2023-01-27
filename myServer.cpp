@@ -23,7 +23,7 @@ int creatServerSock(int port) {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("Error creating socket");
-        return -1;
+        exit(-1);
        
     }
 
@@ -37,12 +37,12 @@ int creatServerSock(int port) {
     /* binding the socket to the port and ip_address, while checking it can be done */
     if (bind(sock, (struct sockaddr *) &server_sin, sizeof (server_sin)) < 0) {
         perror("Error binding socket");
-        return -1;
+        exit(-1);
     }
     /* listens up to 5 clients at a time */
     if (listen(sock, 5) < 0) {
         perror("Error listening to a socket");
-        return -1;
+        exit(-1);
 
     }
     return sock;

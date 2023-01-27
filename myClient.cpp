@@ -6,7 +6,7 @@ int socketCreation(int server_port, char *ip_address) {
     int client_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (client_socket < 0) {
         cerr << "Error creating socket" << endl;
-        return -1;
+        exit(-1);
     }
 
     // connect to the server
@@ -17,13 +17,13 @@ int socketCreation(int server_port, char *ip_address) {
     serverAddr.sin_port = htons(server_port);
     if (inet_pton(AF_INET, ip_address, &serverAddr.sin_addr) <= 0) {
         cerr << "Error parsing IP address" << endl;
-        return -1;
+        exit(-1);
     }
    
     // Connect to the server
     if (connect(client_socket, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
         cerr << "Error connecting to server" << endl;
-        return -1;
+        exit(-1);
     }
     return client_socket;
 
