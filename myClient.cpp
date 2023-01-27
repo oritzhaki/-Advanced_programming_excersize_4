@@ -1,5 +1,6 @@
 #include "myClient.h"
 #include "clientUtilityFunctions.h"
+#include <mutex>
 
 int socketCreation(int server_port, char *ip_address) {
     // Create a socket
@@ -62,8 +63,11 @@ void MyClient::run(int argc, char** argv) {
 
     DefaultIO *io = new SocketIO(client_socket);
     while(true){
+        cout << "BEGIN LOOP IN CLIENT" << endl;
         string input;
+        cout << "BEFORE READ" << endl;
         string message = io->read();
+        cout << "AFTER READ" << endl;
         if(message == "Please upload your local train CSV file.") {
             try {
                 this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -87,13 +91,17 @@ void MyClient::run(int argc, char** argv) {
             getline(cin, path); // get path from user to save results
              // download file in a separate thread to allow user to continue sending requests
             thread client_thread([newSock, path]() {
+                cout << "IN CLIENT THREAD" << endl;
                 SocketIO* sio = new SocketIO(newSock);
                 sio->saveData(path);
                 delete sio;
                 close(newSock);
+                cout << "END CLIENT THREAD" << endl;
             });
             // Detach the thread so that it can run independently
             client_thread.detach();
+            cout << "DETACH THRED" << endl;
+            // write_to_file(newSock);
             continue;
         }
         else if(message == "EXIT"){ // user pressed 8 so exit
