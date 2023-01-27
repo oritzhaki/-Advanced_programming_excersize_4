@@ -21,26 +21,31 @@ void CLI::start() {
     while (variables.work) {
         this->io_->write(tempmenu); // print menu
         this_thread::sleep_for(std::chrono::milliseconds(100));
-        string input = this->io_->read(); // get user choice - input
-        if (input == "1" || input == "2" || input == "3" || input == "4" || input == "5") {
-            Command* command = commands.at(input); // get the wanted command from map
-            string additional_string = command->execute();
-            tempmenu = additional_string + menu;// after finish a command print menu again
-        }
-        else if (input == "8") {
-            Command* command = commands.at(input); // get the wanted command from map
-            string additional_string = command->execute();
-            // close connection to server
-            for(pair<string,Command*> c : commands) {
-                delete c.second; // this is how to delete all new?
+        try {
+              string input = this->io_->read(); // get user choice - input
+            if (input == "1" || input == "2" || input == "3" || input == "4" || input == "5") {
+                Command* command = commands.at(input); // get the wanted command from map
+                string additional_string = command->execute();
+                tempmenu = additional_string + menu;// after finish a command print menu again
             }
-            commands.clear();
-            this->io_->write("EXIT");
-            break;
-        }
-        else {
+            else if (input == "8") {
+                Command* command = commands.at(input); // get the wanted command from map
+                string additional_string = command->execute();
+                // close connection to server
+                for(pair<string,Command*> c : commands) {
+                    delete c.second; // this is how to delete all new?
+                }
+                commands.clear();
+                this->io_->write("EXIT");
+                break;
+            }
+            else {
+                tempmenu = "invalid input\n" + menu;
+            }
+        } catch(...) {
             tempmenu = "invalid input\n" + menu;
         }
+      
     }
     return;
 }
