@@ -27,7 +27,7 @@ string Command5::execute() {
         // send the new port to client so they can both know the new one
         auto randomNum = uni(rng);
         int port = 10000 + randomNum;
-        
+        this->io_->read();
         int sock = creatServerSock(port);
         this->io_->write(to_string(port)); // send new port to client
 
@@ -41,7 +41,6 @@ string Command5::execute() {
             
         });
         myThread.detach();
-        this_thread::sleep_for(std::chrono::milliseconds(100));
         return "";
     
     }
