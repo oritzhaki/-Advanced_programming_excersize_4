@@ -25,9 +25,6 @@ string SocketIO::read() {
     }
 
     if(message.size() == 0) { // if message is empty it means that there is invalid path in client side so abort
-        if(message == "") {
-            return "";
-        }
         throw false;
     }
 
